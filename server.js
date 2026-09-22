@@ -6,6 +6,7 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.use('/fonts/kanit', express.static(path.join(__dirname, 'node_modules/@fontsource/kanit')));
 
 // Basic Authentication Security (ถ้าระบุไว้ใน .env)
 if (process.env.AUTH_USER && process.env.AUTH_PASS) {
