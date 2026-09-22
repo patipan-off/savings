@@ -50,6 +50,20 @@ app.post('/api/categories', async (req, res) => {
     }
 });
 
+app.put('/api/categories/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, color } = req.body;
+    try {
+        await pool.query(
+            'UPDATE categories SET name = COALESCE(?, name), color = COALESCE(?, color) WHERE id = ?',
+            [name || null, color || null, id]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.delete('/api/categories/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -62,7 +76,7 @@ app.delete('/api/categories/:id', async (req, res) => {
 
 app.get('/api/logs', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT month, amounts_json AS amounts, total FROM savings_logs ORDER BY month ASC');
+        const [rows] = await pool.query('SELECT month, amounts_json AS amounts, total, updated_at FROM savings_logs ORDER BY month ASC');
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
