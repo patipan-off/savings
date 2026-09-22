@@ -8,12 +8,12 @@ const app = express();
 app.use(express.json());
 app.use('/fonts/kanit', express.static(path.join(__dirname, 'node_modules/@fontsource/kanit')));
 
-// Basic Authentication Security (ถ้าระบุไว้ใน .env)
+// Basic Authentication Security
 if (process.env.AUTH_USER && process.env.AUTH_PASS) {
     app.use(basicAuth({
         users: { [process.env.AUTH_USER]: process.env.AUTH_PASS },
         challenge: true,
-        realm: 'Savings Tracker Private Area'
+        realm: 'Financial Tracker Private Area'
     }));
 }
 
@@ -31,7 +31,9 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// API Routes
+/* =========================================================
+   1. SAVINGS API ROUTES
+   ========================================================= */
 app.get('/api/categories', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT id, name, color FROM categories ORDER BY sort_order ASC, created_at ASC');
@@ -51,20 +53,6 @@ app.post('/api/categories', async (req, res) => {
     }
 });
 
-app.put('/api/categories/:id', async (req, res) => {
-    const { id } = req.params;
-    const { name, color } = req.body;
-    try {
-        await pool.query(
-            'UPDATE categories SET name = COALESCE(?, name), color = COALESCE(?, color) WHERE id = ?',
-            [name || null, color || null, id]
-        );
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
 app.delete('/api/categories/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -77,7 +65,7 @@ app.delete('/api/categories/:id', async (req, res) => {
 
 app.get('/api/logs', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT month, amounts_json AS amounts, total, updated_at FROM savings_logs ORDER BY month ASC');
+        const [rows] = await pool.query('SELECT month, entry_date, amounts_json AS amounts, total, note, updated_at FROM savings_logs ORDER BY month ASC');
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -85,14 +73,14 @@ app.get('/api/logs', async (req, res) => {
 });
 
 app.post('/api/logs', async (req, res) => {
-    const { month, amounts, total } = req.body;
+    const { month, entry_date, amounts, total, note } = req.body;
     try {
         const query = `
-            INSERT INTO savings_logs (month, amounts_json, total) 
-            VALUES (?, ?, ?) 
-            ON DUPLICATE KEY UPDATE amounts_json = VALUES(amounts_json), total = VALUES(total)
+            INSERT INTO savings_logs (month, entry_date, amounts_json, total, note) 
+            VALUES (?, ?, ?, ?, ?) 
+            ON DUPLICATE KEY UPDATE entry_date = VALUES(entry_date), amounts_json = VALUES(amounts_json), total = VALUES(total), note = VALUES(note)
         `;
-        await pool.query(query, [month, JSON.stringify(amounts), total]);
+        await pool.query(query, [month, entry_date || null, JSON.stringify(amounts), total, note || null]);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -103,6 +91,72 @@ app.delete('/api/logs/:month', async (req, res) => {
     const { month } = req.params;
     try {
         await pool.query('DELETE FROM savings_logs WHERE month = ?', [month]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/* =========================================================
+   2. EXPENSES API ROUTES
+   ========================================================= */
+app.get('/api/expense-categories', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT id, name, color FROM expense_categories ORDER BY sort_order ASC, created_at ASC');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/expense-categories', async (req, res) => {
+    const { id, name, color } = req.body;
+    try {
+        await pool.query('INSERT INTO expense_categories (id, name, color) VALUES (?, ?, ?)', [id, name, color]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/expense-categories/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('DELETE FROM expense_categories WHERE id = ?', [id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/expense-logs', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT month, entry_date, amounts_json AS amounts, total, note, updated_at FROM expense_logs ORDER BY month ASC');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/expense-logs', async (req, res) => {
+    const { month, entry_date, amounts, total, note } = req.body;
+    try {
+        const query = `
+            INSERT INTO expense_logs (month, entry_date, amounts_json, total, note) 
+            VALUES (?, ?, ?, ?, ?) 
+            ON DUPLICATE KEY UPDATE entry_date = VALUES(entry_date), amounts_json = VALUES(amounts_json), total = VALUES(total), note = VALUES(note)
+        `;
+        await pool.query(query, [month, entry_date || null, JSON.stringify(amounts), total, note || null]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/expense-logs/:month', async (req, res) => {
+    const { month } = req.params;
+    try {
+        await pool.query('DELETE FROM expense_logs WHERE month = ?', [month]);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
