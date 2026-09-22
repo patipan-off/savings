@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Savings Tracker (MySQL)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-wallet text-2xl text-indigo-200"></i>
+                <h1 class="text-xl md:text-2xl font-bold tracking-tight">Monthly Savings Tracker</h1>
+            </div>
+            <button onclick="openCategoryModal()" class="bg-indigo-500 hover:bg-indigo-700 text-white text-sm px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-tags"></i>
+                <span>จัดการประเภทเงินเก็บ</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                <div class="p-3.5 bg-indigo-50 text-indigo-600 rounded-xl"><i class="fa-solid fa-vault text-2xl"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase">เงินเก็บสะสมทั้งหมด</p>
+                    <h3 id="statTotal" class="text-2xl font-bold text-slate-800">฿0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-xl"><i class="fa-solid fa-chart-line text-2xl"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase">ออมเฉลี่ยต่อเดือน</p>
+                    <h3 id="statAvg" class="text-2xl font-bold text-slate-800">฿0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                <div class="p-3.5 bg-amber-50 text-amber-600 rounded-xl"><i class="fa-solid fa-trophy text-2xl"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase">ประเภทที่ออมมากที่สุด</p>
+                    <h3 id="statTopCategory" class="text-lg font-bold text-slate-800 truncate">-</h3>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-4">
+                <div class="p-3.5 bg-sky-50 text-sky-600 rounded-xl"><i class="fa-solid fa-database text-2xl"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase">สถานะฐานข้อมูล</p>
+                    <h3 class="text-lg font-bold text-emerald-600">MySQL Online</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">แนวโน้มเงินเก็บสะสมรายเดือน</h2>
+                    <p class="text-xs text-slate-500">กราฟเปรียบเทียบต่อเนื่องหลายปีแบบ Stacked / Line</p>
+                </div>
+                <select id="chartTypeSelect" onchange="updateChart()" class="bg-slate-100 text-slate-700 text-xs font-medium py-1.5 px-3 rounded-lg border-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="stackedBar">กราฟแท่งแบบสะสม (Stacked)</option>
+                    <option value="line">กราฟเส้นแนวโน้ม (Line)</option>
+                </select>
+            </div>
+            <div class="relative h-80 w-full">
+                <canvas id="savingsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <h2 class="text-lg font-bold text-slate-800">บันทึกเงินเก็บประจำเดือน</h2>
+                <form id="savingsForm" onsubmit="handleSaveLog(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">เลือกเดือน / ปี</label>
+                        <input type="month" id="logMonth" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase">ระบุยอดเงินแต่ละประเภท (บาท)</label>
+                        <div id="dynamicInputsContainer" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>บันทึกเข้า MySQL</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4 lg:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-800">ประวัติการบันทึกรายเดือน</h2>
+                    <span id="logCountBadge" class="text-xs bg-slate-100 text-slate-600 font-medium px-2.5 py-1 rounded-full">0 รายการ</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase">
+                                <th class="py-3 px-3">เดือน/ปี</th>
+                                <th class="py-3 px-3 text-right">ยอดรวม (บาท)</th>
+                                <th class="py-3 px-3 text-center">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="categoryModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4 m-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-800">จัดการประเภทเงินเก็บ</h3>
+                <button onclick="closeCategoryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form onsubmit="handleAddCategory(event)" class="flex gap-2">
+                <input type="text" id="newCatName" placeholder="เช่น สลากออมสิน" required class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="color" id="newCatColor" value="#6366f1" class="w-10 h-10 rounded-xl cursor-pointer border border-slate-200 p-1">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-medium">เพิ่ม</button>
+            </form>
+
+            <div class="border-t border-slate-100 pt-3">
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">ประเภทที่มีในระบบ</label>
+                <div id="categoryListContainer" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let categories = [];
+        let logs = [];
+        let savingsChart = null;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            initMonthPicker();
+            await fetchCategories();
+            await fetchLogs();
+        });
+
+        function initMonthPicker() {
+            const now = new Date();
+            document.getElementById("logMonth").value = now.toISOString().slice(0, 7);
+        }
+
+        async function fetchCategories() {
+            try {
+                const res = await fetch('/api/categories');
+                categories = await res.json();
+                renderCategoryInputs();
+                renderModalCategoryList();
+                updateChart();
+                updateStats();
+            } catch (err) {
+                console.error("Fetch categories error:", err);
+            }
+        }
+
+        async function fetchLogs() {
+            try {
+                const res = await fetch('/api/logs');
+                logs = await res.json();
+                renderLogsTable();
+                updateChart();
+                updateStats();
+            } catch (err) {
+                console.error("Fetch logs error:", err);
+            }
+        }
+
+        function renderCategoryInputs() {
+            const container = document.getElementById("dynamicInputsContainer");
+            container.innerHTML = "";
+            categories.forEach(cat => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200";
+                wrapper.innerHTML = `
+                    <div class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></div>
+                    <label class="text-xs font-medium text-slate-700 flex-1 truncate">${cat.name}</label>
+                    <input type="number" data-cat-id="${cat.id}" min="0" placeholder="0" class="w-32 bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-right text-sm font-semibold focus:ring-2 focus:ring-indigo-500">
+                `;
+                container.appendChild(wrapper);
+            });
+        }
+
+        async function handleSaveLog(e) {
+            e.preventDefault();
+            const monthVal = document.getElementById("logMonth").value;
+            const amounts = {};
+            let total = 0;
+
+            document.querySelectorAll("#dynamicInputsContainer input[data-cat-id]").forEach(input => {
+                const catId = input.getAttribute("data-cat-id");
+                const val = parseFloat(input.value) || 0;
+                amounts[catId] = val;
+                total += val;
+            });
+
+            await fetch('/api/logs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ month: monthVal, amounts, total })
+            });
+
+            await fetchLogs();
+            alert(`บันทึกข้อมูลเดือน ${monthVal} เรียบร้อยแล้ว`);
+        }
+
+        async function handleDeleteLog(monthVal) {
+            if (!confirm(`ต้องการลบประวัติของเดือน ${monthVal} ใช่หรือไม่?`)) return;
+            await fetch(`/api/logs/${monthVal}`, { method: 'DELETE' });
+            await fetchLogs();
+        }
+
+        async function handleAddCategory(e) {
+            e.preventDefault();
+            const name = document.getElementById("newCatName").value.trim();
+            const color = document.getElementById("newCatColor").value;
+            if (!name) return;
+
+            const id = 'cat_' + Date.now();
+            await fetch('/api/categories', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, name, color })
+            });
+
+            document.getElementById("newCatName").value = "";
+            await fetchCategories();
+        }
+
+        async function handleDeleteCategory(id) {
+            if (categories.length <= 1) return alert("ต้องมีอย่างน้อย 1 ประเภท");
+            if (!confirm("ต้องการลบประเภทเงินเก็บนี้ใช่หรือไม่?")) return;
+            await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+            await fetchCategories();
+        }
+
+        function openCategoryModal() { document.getElementById("categoryModal").classList.remove("hidden"); }
+        function closeCategoryModal() { document.getElementById("categoryModal").classList.add("hidden"); }
+
+        function renderModalCategoryList() {
+            const container = document.getElementById("categoryListContainer");
+            container.innerHTML = "";
+            categories.forEach(cat => {
+                const div = document.createElement("div");
+                div.className = "flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-200 text-sm";
+                div.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded-full" style="background-color: ${cat.color}"></span>
+                        <span class="font-medium text-slate-700">${cat.name}</span>
+                    </div>
+                    <button onclick="handleDeleteCategory('${cat.id}')" class="text-rose-500 hover:text-rose-700 px-2 py-1 text-xs">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderLogsTable() {
+            const tbody = document.getElementById("logsTableBody");
+            tbody.innerHTML = "";
+            document.getElementById("logCountBadge").innerText = `${logs.length} รายการ`;
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 text-slate-400 text-xs">ยังไม่มีข้อมูลในระบบ</td></tr>`;
+                return;
+            }
+
+            logs.forEach(log => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50/80 transition";
+                tr.innerHTML = `
+                    <td class="py-3 px-3 font-semibold text-slate-700">${log.month}</td>
+                    <td class="py-3 px-3 text-right font-bold text-indigo-600">฿${Number(log.total).toLocaleString()}</td>
+                    <td class="py-3 px-3 text-center">
+                        <button onclick="handleDeleteLog('${log.month}')" class="text-slate-400 hover:text-rose-500 transition px-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateStats() {
+            const grandTotal = logs.reduce((sum, log) => sum + Number(log.total), 0);
+            const avgMonthly = logs.length > 0 ? grandTotal / logs.length : 0;
+
+            document.getElementById("statTotal").innerText = `฿${grandTotal.toLocaleString()}`;
+            document.getElementById("statAvg").innerText = `฿${Math.round(avgMonthly).toLocaleString()}`;
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById("savingsChart").getContext("2d");
+            const chartType = document.getElementById("chartTypeSelect").value;
+            const labels = logs.map(l => l.month);
+
+            const datasets = categories.map(cat => {
+                const data = logs.map(log => {
+                    const amounts = typeof log.amounts === 'string' ? JSON.parse(log.amounts) : log.amounts;
+                    return amounts ? (amounts[cat.id] || 0) : 0;
+                });
+                return {
+                    label: cat.name,
+                    data: data,
+                    backgroundColor: cat.color,
+                    borderColor: cat.color,
+                    borderWidth: 1.5,
+                    borderRadius: 4
+                };
+            });
+
+            if (savingsChart) savingsChart.destroy();
+
+            savingsChart = new Chart(ctx, {
+                type: chartType === "stackedBar" ? "bar" : "line",
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: chartType === "stackedBar" },
+                        y: { stacked: chartType === "stackedBar", beginAtZero: true }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
