@@ -48,10 +48,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
-                    <i class="fa-solid font-bold fa-piggy-bank text-2xl text-amber-300"></i>
+                    <i class="fa-solid font-semibold fa-piggy-bank text-2xl text-amber-300"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold leading-tight">Monthly Savings Tracker</h1>
+                    <h1 class="text-xl font-semibold leading-tight">Monthly Savings Tracker</h1>
                     <p class="text-xs text-emerald-100">ระบบวางแผนและติดตามเงินเก็บระยะยาว (MySQL Connected)</p>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                 class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ยอดเงินเก็บสะสมรวม</p>
-                    <h3 id="totalSavingsValue" class="text-2xl font-bold text-slate-800 mt-1">฿0</h3>
+                    <h3 id="totalSavingsValue" class="text-2xl font-semibold text-slate-800 mt-1">฿0</h3>
                     <p id="totalMonthsCount" class="text-xs text-slate-500 mt-1">จากทั้งหมด 0 เดือน</p>
                 </div>
                 <div
@@ -84,7 +84,7 @@
                 class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ออมเฉลี่ยต่อเดือน</p>
-                    <h3 id="avgMonthlySavings" class="text-2xl font-bold text-slate-800 mt-1">฿0</h3>
+                    <h3 id="avgMonthlySavings" class="text-2xl font-semibold text-slate-800 mt-1">฿0</h3>
                     <p class="text-xs text-emerald-600 mt-1"><i class="fa-solid fa-chart-line mr-1"></i>ประเมินภาพรวม
                     </p>
                 </div>
@@ -97,7 +97,8 @@
                 class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ประเภทที่มีเงินมากสุด</p>
-                    <h3 id="topCategoryName" class="text-lg font-bold text-slate-800 mt-1 truncate max-w-[150px]">-</h3>
+                    <h3 id="topCategoryName" class="text-lg font-semibold text-slate-800 mt-1 truncate max-w-[150px]">-
+                    </h3>
                     <p id="topCategoryValue" class="text-xs text-slate-500 mt-1">฿0</p>
                 </div>
                 <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
@@ -109,7 +110,7 @@
                 class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">เดือนล่าสุดที่ออม</p>
-                    <h3 id="latestMonthLabel" class="text-lg font-bold text-slate-800 mt-1">-</h3>
+                    <h3 id="latestMonthLabel" class="text-lg font-semibold text-slate-800 mt-1">-</h3>
                     <p id="latestMonthAmount" class="text-xs text-emerald-600 mt-1">฿0</p>
                 </div>
                 <div
@@ -127,7 +128,7 @@
                 class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-circle-plus text-emerald-600"></i>
                             <span id="formTitle">บันทึกเงินเก็บประจำเดือน</span>
                         </h2>
@@ -161,7 +162,7 @@
                         <div
                             class="pt-3 border-t border-slate-100 flex justify-between items-center bg-slate-50 p-3 rounded-xl">
                             <span class="text-xs font-semibold text-slate-600">รวมเดือนนี้:</span>
-                            <span id="monthlyFormTotal" class="text-base font-bold text-emerald-600">฿0</span>
+                            <span id="monthlyFormTotal" class="text-base font-semibold text-emerald-600">฿0</span>
                         </div>
 
                         <button type="submit"
@@ -179,7 +180,7 @@
                 <div>
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-chart-column text-emerald-600"></i>
                                 กราฟเปรียบเทียบการออมรายเดือนต่อเนื่องหลายปี
                             </h2>
@@ -204,7 +205,7 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <i class="fa-solid fa-table-list text-emerald-600"></i>
                         ประวัติการบันทึกเงินเก็บ
                     </h2>
@@ -242,7 +243,7 @@
         class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <h3 class="font-semibold text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-tags text-emerald-600"></i>
                     จัดการประเภทเงินเก็บ
                 </h3>
@@ -528,7 +529,7 @@
                     rowHTML += `<td class="p-4 text-right font-mono text-slate-600">${amt > 0 ? formatCurrency(amt) : '-'}</td>`;
                 });
 
-                rowHTML += `<td class="p-4 text-right font-bold text-emerald-600 font-mono">${formatCurrency(record.total)}</td>`;
+                rowHTML += `<td class="p-4 text-right font-semibold text-emerald-600 font-mono">${formatCurrency(record.total)}</td>`;
 
                 // Calculate Month-over-Month Diff
                 const currentIndex = sortedMonthsAsc.indexOf(mKey);
