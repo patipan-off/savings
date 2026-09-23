@@ -34,8 +34,10 @@ CREATE TABLE IF NOT EXISTS `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `color`, `sort_order`) VALUES
-('cat_savings_1', 'เงินฝากประจำ', '#10b981', 1),
-('cat_savings_2', 'กองทุน / หุ้น', '#3b82f6', 2)
+('scb', 'เงินฝาก SCB', '#4c1d95', 1),
+('bbl', 'กองทุน BBL', '#1e40af', 2),
+('pvd', 'PVD', '#267CBC', 3),
+('crypto', 'Crypto', '#d97706', 4)
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `color` = VALUES(`color`), `sort_order` = VALUES(`sort_order`);
 
 -- --------------------------------------------------------
@@ -58,8 +60,12 @@ CREATE TABLE IF NOT EXISTS `expense_categories` (
 --
 
 INSERT INTO `expense_categories` (`id`, `name`, `color`, `sort_order`) VALUES
-('cat_exp_1', 'ค่าใช้จ่ายประจำเดือน', '#ef4444', 1),
-('cat_exp_2', 'บัตรเครดิต', '#f59e0b', 2)
+('credit_card', 'บัตรเครดิต', '#138F2D', 1),
+('water', 'น้ำ', '#DEF4FC', 2),
+('mea', 'ไฟฟ้า', '#7A2682', 3),
+('3bb', 'Internet', '#F47920', 4),
+('true', 'Mobile Bill', '#EC1C24', 5),
+('exat', 'Easy Pass', '#0B2341', 6)
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `color` = VALUES(`color`), `sort_order` = VALUES(`sort_order`);
 
 -- --------------------------------------------------------
