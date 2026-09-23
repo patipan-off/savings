@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Financial Tracker</title>
 
     <link rel="icon" href="/favicon.svg">
@@ -43,97 +43,105 @@
 
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Header Navigation -->
-    <header class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-emerald-500/20 p-2 rounded-xl backdrop-blur-md border border-emerald-500/30">
-                    <i class="fa-solid fa-chart-line text-2xl text-emerald-400"></i>
+    <!-- Header Navigation (Responsive Fix for Mobile & Dynamic Island) -->
+    <header
+        class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-30 pt-safe">
+        <div
+            class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2">
+
+            <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                <div
+                    class="bg-emerald-500/20 p-1.5 sm:p-2 rounded-xl backdrop-blur-md border border-emerald-500/30 flex-shrink-0">
+                    <i class="fa-solid fa-chart-line text-lg sm:text-2xl text-emerald-400"></i>
                 </div>
-                <div>
-                    <h1 class="text-xl font-semibold leading-tight">Financial Tracker</h1>
-                    <p class="text-xs text-slate-300">ระบบติดตามเงินเก็บและค่าใช้จ่ายรายเดือน</p>
+                <div class="min-w-0">
+                    <h1 class="text-base sm:text-xl font-semibold leading-tight truncate">Financial Tracker</h1>
+                    <p class="text-[10px] sm:text-xs text-slate-300 truncate hidden xs:block">
+                        ระบบติดตามเงินเก็บและค่าใช้จ่ายรายเดือน</p>
                 </div>
             </div>
 
             <!-- Tab Navigation Bar -->
-            <div class="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+            <div class="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700 text-xs sm:text-sm">
                 <button id="tabSavingsBtn" onclick="switchTab('savings')"
-                    class="px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-emerald-600 text-white shadow-sm">
-                    <i class="fa-solid fa-piggy-bank"></i>
+                    class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm">
+                    <i class="fa-solid fa-piggy-bank text-xs sm:text-sm"></i>
                     <span>เงินเก็บ</span>
                 </button>
                 <button id="tabExpenseBtn" onclick="switchTab('expenses')"
-                    class="px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-receipt"></i>
+                    class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-receipt text-xs sm:text-sm"></i>
                     <span>ค่าใช้จ่าย</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6">
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow w-full space-y-4 sm:space-y-6">
 
-        <!-- Top Actions Banner -->
-        <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-            <div>
-                <h2 id="activeModuleTitle" class="text-lg font-semibold text-slate-800">ระบบบันทึกเงินเก็บประจำเดือน
-                </h2>
-                <p id="activeModuleSub" class="text-xs text-slate-500">จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน
-                </p>
+        <!-- Top Actions Banner (Mobile Layout Fix) -->
+        <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="min-w-0">
+                <h2 id="activeModuleTitle" class="text-base sm:text-lg font-semibold text-slate-800 truncate">
+                    ระบบบันทึกเงินเก็บประจำเดือน</h2>
+                <p id="activeModuleSub" class="text-xs text-slate-500 truncate">
+                    จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน</p>
             </div>
             <button onclick="openCategoryModal()"
-                class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 border border-slate-200">
+                class="self-start sm:self-auto bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 border border-slate-200 flex-shrink-0">
                 <i class="fa-solid fa-tags text-slate-500"></i>
                 <span>จัดการประเภท</span>
             </button>
         </div>
 
         <!-- Metrics Dashboard -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div
-                class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p id="metric3Label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div class="min-w-0">
+                    <p id="metric3Label"
+                        class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         ประเภทสูงสุด (เดือนล่าสุด)</p>
-                    <h3 id="metric3Value" class="text-lg font-semibold text-slate-800 mt-1 truncate max-w-[150px]">-
-                    </h3>
-                    <p id="metric3Sub" class="text-xs text-slate-500 mt-1">฿0</p>
+                    <h3 id="metric3Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
+                    <p id="metric3Sub" class="text-xs text-slate-500 mt-0.5 sm:mt-1">฿0</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
                     <i class="fa-solid fa-trophy"></i>
                 </div>
             </div>
 
             <div
-                class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p id="metric4Label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        เดือนล่าสุด</p>
-                    <h3 id="metric4Value" class="text-lg font-semibold text-slate-800 mt-1">-</h3>
-                    <p id="metric4Sub" class="text-xs text-emerald-600 mt-1">฿0</p>
+                class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div class="min-w-0">
+                    <p id="metric4Label"
+                        class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">เดือนล่าสุด
+                    </p>
+                    <h3 id="metric4Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
+                    <p id="metric4Sub" class="text-xs text-emerald-600 mt-0.5 sm:mt-1">฿0</p>
                 </div>
                 <div
-                    class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+                    class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
                     <i class="fa-regular fa-calendar-check"></i>
                 </div>
             </div>
         </div>
 
         <!-- Form & Chart Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
             <!-- Entry Form -->
             <div
-                class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <i id="formHeaderIcon" class="fa-solid fa-circle-plus text-emerald-600"></i>
-                            <span id="formTitle">บันทึกเงินเก็บประจำเดือน</span>
+                        <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 min-w-0">
+                            <i id="formHeaderIcon" class="fa-solid fa-circle-plus text-emerald-600 flex-shrink-0"></i>
+                            <span id="formTitle" class="truncate">บันทึกเงินเก็บประจำเดือน</span>
                         </h2>
                         <button id="cancelEditBtn" onclick="resetForm()" type="button"
-                            class="hidden text-xs text-rose-500 hover:text-rose-700 font-medium">
+                            class="hidden text-xs text-rose-500 hover:text-rose-700 font-medium flex-shrink-0">
                             <i class="fa-solid fa-xmark mr-1"></i>ยกเลิก
                         </button>
                     </div>
@@ -147,14 +155,15 @@
                         </div>
 
                         <div class="pt-2 border-t border-slate-100">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-xs font-semibold text-slate-600">ระบุจำนวนเงินสุทธิแยกตามประเภท
+                            <div class="flex justify-between items-center mb-2 gap-1">
+                                <label
+                                    class="text-xs font-semibold text-slate-600 truncate">ระบุจำนวนเงินสุทธิแยกตามประเภท
                                     (บาท)</label>
                                 <button type="button" onclick="openCategoryModal()"
-                                    class="text-xs text-emerald-600 hover:underline">+ จัดการประเภท</button>
+                                    class="text-xs text-emerald-600 hover:underline flex-shrink-0">+
+                                    จัดการประเภท</button>
                             </div>
-                            <div id="categoryInputsContainer" class="space-y-3 overflow-y-auto pr-1 custom-scrollbar">
-                            </div>
+                            <div id="categoryInputsContainer" class="space-y-3 pr-1 max-h-64 sm:max-h-80"></div>
                         </div>
 
                         <div>
@@ -181,24 +190,24 @@
 
             <!-- Multi-Year Chart -->
             <div
-                class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                <div>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                        <div>
-                            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                                <i id="chartHeaderIcon" class="fa-solid fa-chart-column text-emerald-600"></i>
-                                กราฟแนวโน้มรายเดือน
-                            </h2>
-                            <p class="text-xs text-slate-500">แสดงมูลค่ารวมและสัดส่วน ณ สิ้นเดือน</p>
-                        </div>
-                        <select id="chartTypeSelect" onchange="updateChart()"
-                            class="bg-slate-100 border border-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none">
-                            <option value="stacked">กราฟแท่ง (Stacked)</option>
-                            <option value="line">กราฟเส้นแนวโน้ม (Trend Line)</option>
-                        </select>
+                class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 mb-4">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <i id="chartHeaderIcon" class="fa-solid fa-chart-column text-emerald-600"></i>
+                            กราฟแนวโน้มรายเดือน
+                        </h2>
+                        <p class="text-xs text-slate-500">แสดงมูลค่ารวมและสัดส่วน ณ สิ้นเดือน</p>
                     </div>
+                    <select id="chartTypeSelect" onchange="updateChart()"
+                        class="bg-slate-100 border border-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none self-start sm:self-auto">
+                        <option value="stacked">กราฟแท่ง (Stacked)</option>
+                        <option value="line">กราฟเส้นแนวโน้ม (Trend Line)</option>
+                    </select>
+                </div>
 
-                    <div class="relative w-full h-[320px] sm:h-[360px]">
+                <div class="relative w-full h-[260px] sm:h-auto sm:flex-1 flex flex-col">
+                    <div class="my-auto h-full max-h-[500px]">
                         <canvas id="mainChart"></canvas>
                     </div>
                 </div>
@@ -208,9 +217,10 @@
 
         <!-- History Table Section -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div
+                class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <i id="tableHeaderIcon" class="fa-solid fa-table-list text-emerald-600"></i>
                         ประวัติการอัปเดตยอดสุทธิ
                     </h2>
@@ -221,24 +231,24 @@
             </div>
 
             <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse text-sm">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
                     <thead>
-                        <tr class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-200"
+                        <tr class="bg-slate-50 text-slate-500 text-[11px] sm:text-xs font-semibold uppercase tracking-wider border-b border-slate-200"
                             id="tableHeaderRow">
-                            <th class="p-4">เดือน / ปี</th>
-                            <th class="p-4 text-right">ยอดรวม</th>
-                            <th class="p-4 text-center">เปลี่ยนแปลง</th>
-                            <th class="p-4">หมายเหตุ</th>
-                            <th class="p-4 text-center">วันเวลาที่บันทึก</th>
-                            <th class="p-4 text-center">จัดการ</th>
+                            <th class="p-3 sm:p-4">เดือน / ปี</th>
+                            <th class="p-3 sm:p-4 text-right">ยอดรวม</th>
+                            <th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th>
+                            <th class="p-3 sm:p-4">หมายเหตุ</th>
+                            <th class="p-3 sm:p-4 text-center">วันเวลาที่บันทึก</th>
+                            <th class="p-3 sm:p-4 text-center">จัดการ</th>
                         </tr>
                     </thead>
                     <tbody id="mainTableBody" class="divide-y divide-slate-100"></tbody>
                 </table>
             </div>
             <div id="emptyTableState" class="hidden p-8 text-center text-slate-400">
-                <i class="fa-regular fa-folder-open text-4xl mb-2"></i>
-                <p class="text-sm">ยังไม่มีข้อมูลในระบบ ให้เริ่มบันทึกจากฟอร์มด้านบนได้เลย</p>
+                <i class="fa-regular fa-folder-open text-3xl sm:text-4xl mb-2"></i>
+                <p class="text-xs sm:text-sm">ยังไม่มีข้อมูลในระบบ ให้เริ่มบันทึกจากฟอร์มด้านบนได้เลย</p>
             </div>
         </div>
 
@@ -248,25 +258,26 @@
     <div id="categoryModal"
         class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 id="categoryModalTitle" class="font-semibold text-slate-800 flex items-center gap-2">
+            <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="categoryModalTitle"
+                    class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
                     <i class="fa-solid fa-tags text-emerald-600"></i>
                     จัดการประเภท
                 </h3>
-                <button onclick="closeCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600"><i
+                <button onclick="closeCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600 p-1"><i
                         class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <div class="p-5 space-y-4">
+            <div class="p-4 sm:p-5 space-y-4">
                 <form onsubmit="handleAddCategory(event)" class="space-y-3 pb-4 border-b border-slate-100">
                     <label class="block text-xs font-semibold text-slate-600">เพิ่มประเภทใหม่</label>
                     <div class="flex items-center gap-2">
                         <input type="text" id="newCatName" placeholder="ชื่อประเภท..." required
-                            class="flex-grow px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                            class="flex-grow px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
                         <input type="color" id="newCatColor" value="#10b981"
-                            class="w-10 h-10 border-0 rounded-xl cursor-pointer">
+                            class="w-9 h-9 border-0 rounded-xl cursor-pointer flex-shrink-0">
                         <button type="submit"
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-sm font-medium transition flex items-center gap-1">
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1 flex-shrink-0">
                             <i class="fa-solid fa-plus"></i> เพิ่ม
                         </button>
                     </div>
@@ -274,8 +285,8 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-2">รายการประเภทปัจจุบัน</label>
-                    <div id="categoryListContainer" class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar pr-1">
-                    </div>
+                    <div id="categoryListContainer"
+                        class="space-y-2 max-h-52 sm:max-h-60 overflow-y-auto custom-scrollbar pr-1"></div>
                 </div>
             </div>
         </div>
@@ -345,11 +356,11 @@
             const expenseBtn = document.getElementById('tabExpenseBtn');
 
             if (tab === 'savings') {
-                savingsBtn.className = "px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-emerald-600 text-white shadow-sm";
-                expenseBtn.className = "px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-white";
+                savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm";
+                expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
             } else {
-                expenseBtn.className = "px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-rose-600 text-white shadow-sm";
-                savingsBtn.className = "px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-white";
+                expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
+                savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
             }
 
             resetForm();
@@ -404,7 +415,6 @@
             return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
-        // --- Event Prevention Functions ---
         function preventArrowKeys(e) {
             if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) {
                 e.preventDefault();
@@ -416,19 +426,15 @@
             e.preventDefault();
         }
 
-        // --- Helper functions สำหรับจัดการ Mask และ Format ตัวเลข ---
         function maskNumberInput(val) {
             if (!val) return '';
-
             let cleanVal = val.replace(/[^0-9.]/g, '');
-
             const parts = cleanVal.split('.');
             if (parts.length > 2) {
                 cleanVal = parts[0] + '.' + parts.slice(1).join('');
             }
 
             let [integerPart, decimalPart] = cleanVal.split('.');
-
             if (integerPart.length > 1) {
                 integerPart = integerPart.replace(/^0+/, '');
                 if (integerPart === '') integerPart = '0';
@@ -470,7 +476,6 @@
             const record = dataMap[selectedMonth];
 
             if (record) {
-                // ถ้ามีข้อมูลในเดือนที่เลือก ให้แสดงข้อมูลของเดือนนั้น
                 document.getElementById('entryNote').value = record.note || '';
                 document.querySelectorAll('.category-amount-input').forEach(input => {
                     const val = record.amounts && record.amounts[input.dataset.catId] !== undefined ? record.amounts[input.dataset.catId] : '';
@@ -478,7 +483,6 @@
                 });
                 document.getElementById('submitBtnText').innerText = 'อัปเดตยอดเดือนนี้';
             } else {
-                // ถ้ายังไม่มีข้อมูลเดือนนี้ ให้ดึงค่าจากเดือนล่าสุดในระบบมาใช้เป็น Init Value
                 const sortedMonths = Object.keys(dataMap).sort();
                 const latestMonthKey = sortedMonths.length > 0 ? sortedMonths[sortedMonths.length - 1] : null;
                 const latestRecord = latestMonthKey ? dataMap[latestMonthKey] : null;
@@ -507,10 +511,10 @@
 
             categories.forEach(cat => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60';
+                div.className = 'flex items-center justify-between gap-2 bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/60';
                 div.innerHTML = `
-                    <div class="flex items-center gap-2 min-w-[120px]">
-                        <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
+                    <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                        <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
                         <span class="text-xs font-medium text-slate-700 truncate">${cat.name}</span>
                     </div>
                     <input type="text" 
@@ -521,7 +525,7 @@
                            onfocus="this.select()"
                            onkeydown="preventArrowKeys(event)"
                            onwheel="preventScrollChange(event)"
-                           class="category-amount-input w-28 sm:w-36 text-right px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                           class="category-amount-input w-28 sm:w-36 text-right px-2 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none flex-shrink-0">
                 `;
                 container.appendChild(div);
             });
@@ -630,9 +634,9 @@
             const categories = getCurrentCategories();
             const dataMap = getCurrentDataMap();
 
-            headerRow.innerHTML = `<th class="p-4">เดือน / ปี</th>`;
-            categories.forEach(cat => headerRow.innerHTML += `<th class="p-4 text-right">${cat.name}</th>`);
-            headerRow.innerHTML += `<th class="p-4 text-right">ยอดรวม</th><th class="p-4 text-center">เปลี่ยนแปลง</th><th class="p-4">หมายเหตุ</th><th class="p-4 text-center">วันเวลาบันทึก</th><th class="p-4 text-center">จัดการ</th>`;
+            headerRow.innerHTML = `<th class="p-3 sm:p-4">เดือน / ปี</th>`;
+            categories.forEach(cat => headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">${cat.name}</th>`);
+            headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">ยอดรวม</th><th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th><th class="p-3 sm:p-4">หมายเหตุ</th><th class="p-3 sm:p-4 text-center">วันเวลาบันทึก</th><th class="p-3 sm:p-4 text-center">จัดการ</th>`;
 
             tbody.innerHTML = '';
             const sortedMonthsAsc = Object.keys(dataMap).sort();
@@ -656,15 +660,15 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 text-slate-700';
 
-                let rowHTML = `<td class="p-4 font-semibold text-slate-800 whitespace-nowrap">${formatMonthYear(mKey)}</td>`;
+                let rowHTML = `<td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap">${formatMonthYear(mKey)}</td>`;
 
                 categories.forEach(cat => {
                     const amt = record.amounts ? (record.amounts[cat.id] || 0) : 0;
-                    rowHTML += `<td class="p-4 text-right font-mono text-slate-600">${amt > 0 ? formatCurrency(amt) : '-'}</td>`;
+                    rowHTML += `<td class="p-3 sm:p-4 text-right font-mono text-slate-600">${amt > 0 ? formatCurrency(amt) : '-'}</td>`;
                 });
 
                 const totalColorClass = currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600';
-                rowHTML += `<td class="p-4 text-right font-semibold font-mono ${totalColorClass}">${formatCurrency(record.total)}</td>`;
+                rowHTML += `<td class="p-3 sm:p-4 text-right font-semibold font-mono ${totalColorClass}">${formatCurrency(record.total)}</td>`;
 
                 const currentIndex = sortedMonthsAsc.indexOf(mKey);
                 let diffBadge = `<span class="text-xs text-slate-400">-</span>`;
@@ -673,22 +677,22 @@
                     const diff = record.total - dataMap[prevKey].total;
                     if (diff > 0) {
                         const bg = currentTab === 'savings' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600';
-                        diffBadge = `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${bg}"><i class="fa-solid fa-arrow-up mr-1"></i>+${formatCurrency(diff)}</span>`;
+                        diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-up mr-1"></i>+${formatCurrency(diff)}</span>`;
                     } else if (diff < 0) {
                         const bg = currentTab === 'savings' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600';
-                        diffBadge = `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${bg}"><i class="fa-solid fa-arrow-down mr-1"></i>${formatCurrency(diff)}</span>`;
+                        diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-down mr-1"></i>${formatCurrency(diff)}</span>`;
                     } else {
-                        diffBadge = `<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">เท่าเดิม</span>`;
+                        diffBadge = `<span class="text-[11px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">เท่าเดิม</span>`;
                     }
                 }
 
-                rowHTML += `<td class="p-4 text-center whitespace-nowrap">${diffBadge}</td>`;
-                rowHTML += `<td class="p-4 text-xs text-slate-600 max-w-[200px] truncate" title="${record.note || ''}">${record.note || '-'}</td>`;
-                rowHTML += `<td class="p-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDateTime(record.updated_at)}</td>`;
+                rowHTML += `<td class="p-3 sm:p-4 text-center whitespace-nowrap">${diffBadge}</td>`;
+                rowHTML += `<td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] sm:max-w-[200px] truncate" title="${record.note || ''}">${record.note || '-'}</td>`;
+                rowHTML += `<td class="p-3 sm:p-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDateTime(record.updated_at)}</td>`;
                 rowHTML += `
-                    <td class="p-4 text-center whitespace-nowrap">
-                        <button onclick="editRecord('${mKey}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-2 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteRecord('${mKey}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-2 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="p-3 sm:p-4 text-center whitespace-nowrap">
+                        <button onclick="editRecord('${mKey}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-1.5 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteRecord('${mKey}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tr.innerHTML = rowHTML;
@@ -704,7 +708,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit', size: 12 }, usePointStyle: true } } },
+                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit', size: 11 }, usePointStyle: true } } },
                     scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => '฿' + v.toLocaleString() } } }
                 }
             });
@@ -770,7 +774,7 @@
                 div.innerHTML = `
                     <div class="flex items-center gap-2">
                         <span class="w-3.5 h-3.5 rounded-full" style="background-color: ${cat.color}"></span>
-                        <span class="text-sm font-medium text-slate-700">${cat.name}</span>
+                        <span class="text-xs sm:text-sm font-medium text-slate-700">${cat.name}</span>
                     </div>
                     <button onclick="deleteCategory('${cat.id}')" type="button" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash-can"></i></button>
                 `;
