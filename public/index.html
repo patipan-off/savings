@@ -139,19 +139,11 @@
                     </div>
 
                     <form id="mainForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกเดือน / ปี <span
-                                        class="text-rose-500">*</span></label>
-                                <input type="month" id="entryMonth" required onchange="handleMonthChange(this.value)"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">วันที่ระบุ <span
-                                        class="text-slate-400 font-normal">(Optional)</span></label>
-                                <input type="date" id="entryDate"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
-                            </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกเดือน / ปี <span
+                                    class="text-rose-500">*</span></label>
+                            <input type="month" id="entryMonth" required onchange="handleMonthChange(this.value)"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
                         </div>
 
                         <div class="pt-2 border-t border-slate-100">
@@ -234,7 +226,6 @@
                         <tr class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-200"
                             id="tableHeaderRow">
                             <th class="p-4">เดือน / ปี</th>
-                            <th class="p-4 text-center">วันที่ระบุ</th>
                             <th class="p-4 text-right">ยอดรวม</th>
                             <th class="p-4 text-center">เปลี่ยนแปลง</th>
                             <th class="p-4">หมายเหตุ</th>
@@ -397,20 +388,13 @@
         }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(amount || 0);
+            return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 2 }).format(amount || 0);
         }
 
         function formatMonthYear(monthKey) {
             if (!monthKey) return '-';
             const [year, month] = monthKey.split('-');
             return `${monthNamesThai[parseInt(month) - 1]} ${parseInt(year) + 543}`;
-        }
-
-        function formatDateDisplay(dateStr) {
-            if (!dateStr) return '-';
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return '-';
-            return d.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
         }
 
         function formatDateTime(isoStr) {
@@ -420,22 +404,91 @@
             return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
+        // --- Event Prevention Functions ---
+        function preventArrowKeys(e) {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) {
+                e.preventDefault();
+            }
+        }
+
+        function preventScrollChange(e) {
+            e.target.blur();
+            e.preventDefault();
+        }
+
+        // --- Helper functions สำหรับจัดการ Mask และ Format ตัวเลข ---
+        function maskNumberInput(val) {
+            if (!val) return '';
+
+            let cleanVal = val.replace(/[^0-9.]/g, '');
+
+            const parts = cleanVal.split('.');
+            if (parts.length > 2) {
+                cleanVal = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            let [integerPart, decimalPart] = cleanVal.split('.');
+
+            if (integerPart.length > 1) {
+                integerPart = integerPart.replace(/^0+/, '');
+                if (integerPart === '') integerPart = '0';
+            }
+
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            if (decimalPart !== undefined) {
+                decimalPart = decimalPart.slice(0, 2);
+                return `${integerPart}.${decimalPart}`;
+            }
+
+            return integerPart;
+        }
+
+        function parseInputValue(val) {
+            if (!val) return 0;
+            const cleanVal = val.toString().replace(/,/g, '');
+            const parsed = parseFloat(cleanVal);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function formatDisplayValue(num) {
+            if (num === undefined || num === null || num === '' || num === 0) return '';
+            const n = parseFloat(num);
+            if (isNaN(n) || n === 0) return '';
+            return maskNumberInput(n.toString());
+        }
+
+        function handleInputMask(input) {
+            const masked = maskNumberInput(input.value);
+            input.value = masked;
+            calculateFormTotal();
+        }
+
         function handleMonthChange(selectedMonth) {
             if (!selectedMonth) return;
             const dataMap = getCurrentDataMap();
             const record = dataMap[selectedMonth];
 
             if (record) {
-                document.getElementById('entryDate').value = record.entry_date ? record.entry_date.slice(0, 10) : '';
+                // ถ้ามีข้อมูลในเดือนที่เลือก ให้แสดงข้อมูลของเดือนนั้น
                 document.getElementById('entryNote').value = record.note || '';
                 document.querySelectorAll('.category-amount-input').forEach(input => {
-                    input.value = record.amounts && record.amounts[input.dataset.catId] !== undefined ? record.amounts[input.dataset.catId] : '';
+                    const val = record.amounts && record.amounts[input.dataset.catId] !== undefined ? record.amounts[input.dataset.catId] : '';
+                    input.value = formatDisplayValue(val);
                 });
                 document.getElementById('submitBtnText').innerText = 'อัปเดตยอดเดือนนี้';
             } else {
-                document.getElementById('entryDate').value = '';
+                // ถ้ายังไม่มีข้อมูลเดือนนี้ ให้ดึงค่าจากเดือนล่าสุดในระบบมาใช้เป็น Init Value
+                const sortedMonths = Object.keys(dataMap).sort();
+                const latestMonthKey = sortedMonths.length > 0 ? sortedMonths[sortedMonths.length - 1] : null;
+                const latestRecord = latestMonthKey ? dataMap[latestMonthKey] : null;
+
                 document.getElementById('entryNote').value = '';
-                document.querySelectorAll('.category-amount-input').forEach(input => input.value = '');
+                document.querySelectorAll('.category-amount-input').forEach(input => {
+                    const catId = input.dataset.catId;
+                    const initVal = (latestRecord && latestRecord.amounts && latestRecord.amounts[catId] !== undefined) ? latestRecord.amounts[catId] : '';
+                    input.value = formatDisplayValue(initVal);
+                });
                 document.getElementById('submitBtnText').innerText = 'บันทึกข้อมูลใหม่';
             }
             calculateFormTotal();
@@ -460,7 +513,15 @@
                         <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
                         <span class="text-xs font-medium text-slate-700 truncate">${cat.name}</span>
                     </div>
-                    <input type="number" data-cat-id="${cat.id}" placeholder="0" min="0" step="any" oninput="calculateFormTotal()" class="category-amount-input w-28 sm:w-36 text-right px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    <input type="text" 
+                           inputmode="decimal" 
+                           data-cat-id="${cat.id}" 
+                           placeholder="0" 
+                           oninput="handleInputMask(this)" 
+                           onfocus="this.select()"
+                           onkeydown="preventArrowKeys(event)"
+                           onwheel="preventScrollChange(event)"
+                           class="category-amount-input w-28 sm:w-36 text-right px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
                 `;
                 container.appendChild(div);
             });
@@ -469,7 +530,7 @@
 
         function calculateFormTotal() {
             let total = 0;
-            document.querySelectorAll('.category-amount-input').forEach(input => total += parseFloat(input.value) || 0);
+            document.querySelectorAll('.category-amount-input').forEach(input => total += parseInputValue(input.value));
             const totalEl = document.getElementById('monthlyFormTotal');
             totalEl.innerText = formatCurrency(total);
             totalEl.className = `text-base font-semibold ${currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600'}`;
@@ -478,13 +539,12 @@
         async function handleFormSubmit(e) {
             e.preventDefault();
             const month = document.getElementById('entryMonth').value;
-            const entry_date = document.getElementById('entryDate').value || null;
             const note = document.getElementById('entryNote').value.trim() || null;
             const amounts = {};
             let total = 0;
 
             document.querySelectorAll('.category-amount-input').forEach(input => {
-                const val = parseFloat(input.value) || 0;
+                const val = parseInputValue(input.value);
                 amounts[input.dataset.catId] = val;
                 total += val;
             });
@@ -493,7 +553,7 @@
             await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ month, entry_date, amounts, total, note })
+                body: JSON.stringify({ month, amounts, total, note })
             });
 
             await fetchAllData();
@@ -570,7 +630,7 @@
             const categories = getCurrentCategories();
             const dataMap = getCurrentDataMap();
 
-            headerRow.innerHTML = `<th class="p-4">เดือน / ปี</th><th class="p-4 text-center">วันที่ระบุ</th>`;
+            headerRow.innerHTML = `<th class="p-4">เดือน / ปี</th>`;
             categories.forEach(cat => headerRow.innerHTML += `<th class="p-4 text-right">${cat.name}</th>`);
             headerRow.innerHTML += `<th class="p-4 text-right">ยอดรวม</th><th class="p-4 text-center">เปลี่ยนแปลง</th><th class="p-4">หมายเหตุ</th><th class="p-4 text-center">วันเวลาบันทึก</th><th class="p-4 text-center">จัดการ</th>`;
 
@@ -597,7 +657,6 @@
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 text-slate-700';
 
                 let rowHTML = `<td class="p-4 font-semibold text-slate-800 whitespace-nowrap">${formatMonthYear(mKey)}</td>`;
-                rowHTML += `<td class="p-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDateDisplay(record.entry_date)}</td>`;
 
                 categories.forEach(cat => {
                     const amt = record.amounts ? (record.amounts[cat.id] || 0) : 0;
