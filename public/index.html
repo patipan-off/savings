@@ -2,561 +2,557 @@
 <html lang="th">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Financial Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Financial Tracker</title>
 
-    <link rel="icon" href="/favicon.svg">
+  <link rel="icon" href="/favicon.svg">
 
-    <link rel="stylesheet" href="/fonts/kanit/300.css">
-    <link rel="stylesheet" href="/fonts/kanit/400.css">
-    <link rel="stylesheet" href="/fonts/kanit/500.css">
-    <link rel="stylesheet" href="/fonts/kanit/600.css">
-    <link rel="stylesheet" href="/fonts/kanit/700.css">
+  <link rel="stylesheet" href="/fonts/kanit/300.css">
+  <link rel="stylesheet" href="/fonts/kanit/400.css">
+  <link rel="stylesheet" href="/fonts/kanit/500.css">
+  <link rel="stylesheet" href="/fonts/kanit/600.css">
+  <link rel="stylesheet" href="/fonts/kanit/700.css">
 
-    <link rel="stylesheet" href="/font-awesome6.4.0.min.css">
+  <link rel="stylesheet" href="/font-awesome6.4.0.min.css">
 
-    <script src="/tailwindcss3.4.17.js"></script>
-    <script src="/chart.js"></script>
+  <script src="/tailwindcss3.4.17.js"></script>
+  <script src="/chart.js"></script>
 
-    <style>
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f8fafc;
-        }
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #f8fafc;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-    </style>
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Header Navigation (Responsive Fix for Mobile & Dynamic Island) -->
-    <header
-        class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-30 pt-safe">
+  <!-- Header Navigation (Responsive Fix for Mobile & Dynamic Island) -->
+  <header
+    class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-30 pt-safe">
+    <div
+      class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2">
+
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
         <div
-            class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2">
-
-            <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
-                <div
-                    class="bg-emerald-500/20 p-1.5 sm:p-2 rounded-xl backdrop-blur-md border border-emerald-500/30 flex-shrink-0">
-                    <i class="fa-solid fa-chart-line text-lg sm:text-2xl text-emerald-400"></i>
-                </div>
-                <div class="min-w-0">
-                    <h1 class="text-base sm:text-xl font-semibold leading-tight truncate">Financial Tracker</h1>
-                    <p class="text-[10px] sm:text-xs text-slate-300 truncate hidden xs:block">
-                        ระบบติดตามเงินเก็บและค่าใช้จ่ายรายเดือน</p>
-                </div>
-            </div>
-
-            <!-- Tab Navigation Bar -->
-            <div class="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700 text-xs sm:text-sm">
-                <button id="tabSavingsBtn" onclick="switchTab('savings')"
-                    class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm">
-                    <i class="fa-solid fa-piggy-bank text-xs sm:text-sm"></i>
-                    <span>เงินเก็บ</span>
-                </button>
-                <button id="tabExpenseBtn" onclick="switchTab('expenses')"
-                    class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-receipt text-xs sm:text-sm"></i>
-                    <span>ค่าใช้จ่าย</span>
-                </button>
-            </div>
+          class="bg-emerald-500/20 p-1.5 sm:p-2 rounded-xl backdrop-blur-md border border-emerald-500/30 flex-shrink-0">
+          <i class="fa-solid fa-chart-line text-lg sm:text-2xl text-emerald-400"></i>
         </div>
-    </header>
+        <div class="min-w-0">
+          <h1 class="text-base sm:text-xl font-semibold leading-tight truncate">Financial Tracker</h1>
+          <p class="text-[10px] sm:text-xs text-slate-300 truncate hidden xs:block">
+            ระบบติดตามเงินเก็บและค่าใช้จ่ายรายเดือน</p>
+        </div>
+      </div>
 
-    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow w-full space-y-4 sm:space-y-6">
+      <!-- Tab Navigation Bar -->
+      <div class="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700 text-xs sm:text-sm">
+        <button id="tabSavingsBtn" onclick="switchTab('savings')"
+          class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm">
+          <i class="fa-solid fa-piggy-bank text-xs sm:text-sm"></i>
+          <span>เงินเก็บ</span>
+        </button>
+        <button id="tabExpenseBtn" onclick="switchTab('expenses')"
+          class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white">
+          <i class="fa-solid fa-receipt text-xs sm:text-sm"></i>
+          <span>ค่าใช้จ่าย</span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-        <!-- Top Actions Banner (Mobile Layout Fix) -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow w-full space-y-4 sm:space-y-6">
+
+    <!-- Top Actions Banner (Mobile Layout Fix) -->
+    <div
+      class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+      <div class="min-w-0">
+        <h2 id="activeModuleTitle" class="text-base sm:text-lg font-semibold text-slate-800 truncate">
+          ระบบบันทึกเงินเก็บประจำเดือน</h2>
+        <p id="activeModuleSub" class="text-xs text-slate-500 truncate">
+          จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน</p>
+      </div>
+      <button onclick="openCategoryModal()"
+        class="self-start sm:self-auto bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 border border-slate-200 flex-shrink-0">
+        <i class="fa-solid fa-tags text-slate-500"></i>
+        <span>จัดการประเภท</span>
+      </button>
+    </div>
+
+    <!-- Metrics Dashboard -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div
+        class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+        <div class="min-w-0">
+          <p id="metric3Label" class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            ประเภทสูงสุด (เดือนล่าสุด)</p>
+          <h3 id="metric3Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
+          <p id="metric3Sub" class="text-xs text-slate-500 mt-0.5 sm:mt-1">฿0</p>
+        </div>
         <div
-            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-            <div class="min-w-0">
-                <h2 id="activeModuleTitle" class="text-base sm:text-lg font-semibold text-slate-800 truncate">
-                    ระบบบันทึกเงินเก็บประจำเดือน</h2>
-                <p id="activeModuleSub" class="text-xs text-slate-500 truncate">
-                    จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน</p>
-            </div>
-            <button onclick="openCategoryModal()"
-                class="self-start sm:self-auto bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 border border-slate-200 flex-shrink-0">
-                <i class="fa-solid fa-tags text-slate-500"></i>
-                <span>จัดการประเภท</span>
+          class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+        <div class="min-w-0">
+          <p id="metric4Label" class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            เดือนล่าสุด
+          </p>
+          <h3 id="metric4Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
+          <p id="metric4Sub" class="text-xs text-emerald-600 mt-0.5 sm:mt-1">฿0</p>
+        </div>
+        <div
+          class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
+          <i class="fa-regular fa-calendar-check"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form & Chart Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+
+      <!-- Entry Form -->
+      <div
+        class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 min-w-0">
+              <i id="formHeaderIcon" class="fa-solid fa-circle-plus text-emerald-600 flex-shrink-0"></i>
+              <span id="formTitle" class="truncate">บันทึกเงินเก็บประจำเดือน</span>
+            </h2>
+            <button id="cancelEditBtn" onclick="resetForm()" type="button"
+              class="hidden text-xs text-rose-500 hover:text-rose-700 font-medium flex-shrink-0">
+              <i class="fa-solid fa-xmark mr-1"></i>ยกเลิก
             </button>
+          </div>
+
+          <form id="mainForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกเดือน / ปี <span
+                  class="text-rose-500">*</span></label>
+              <div class="flex flex-col">
+                <input type="month" id="entryMonth" required onchange="handleMonthChange(this.value)"
+                  class="px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs flex-1">
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100">
+              <div class="flex justify-between items-center mb-2 gap-1">
+                <label class="text-xs font-semibold text-slate-600 truncate">ระบุจำนวนเงินสุทธิแยกตามประเภท
+                  (บาท)</label>
+                <button type="button" onclick="openCategoryModal()"
+                  class="text-xs text-emerald-600 hover:underline flex-shrink-0">+
+                  จัดการประเภท</button>
+              </div>
+              <div id="categoryInputsContainer" class="space-y-3 pr-1"></div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">หมายเหตุ /
+                โน้ตย่อ <span class="text-slate-400 font-normal">(Optional)</span></label>
+              <input type="text" id="entryNote" placeholder="ไม่มี"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+              <span class="text-xs font-semibold text-slate-600">รวมเดือนนี้:</span>
+              <span id="monthlyFormTotal" class="text-base font-semibold text-emerald-600">฿0</span>
+            </div>
+
+            <button type="submit" id="submitBtn"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span id="submitBtnText">อัปเดต / บันทึกข้อมูล</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Multi-Year Chart -->
+      <div
+        class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 mb-4">
+          <div>
+            <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
+              <i id="chartHeaderIcon" class="fa-solid fa-chart-column text-emerald-600"></i>
+              กราฟแนวโน้มรายเดือน
+            </h2>
+            <p class="text-xs text-slate-500">แสดงมูลค่ารวมและสัดส่วน ณ สิ้นเดือน</p>
+          </div>
+          <select id="chartTypeSelect" onchange="updateChart()"
+            class="bg-slate-100 border border-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none self-start sm:self-auto">
+            <option value="stacked">กราฟแท่ง (Stacked)</option>
+            <option value="line">กราฟเส้นแนวโน้ม (Trend Line)</option>
+          </select>
         </div>
 
-        <!-- Metrics Dashboard -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div
-                class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div class="min-w-0">
-                    <p id="metric3Label"
-                        class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        ประเภทสูงสุด (เดือนล่าสุด)</p>
-                    <h3 id="metric3Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
-                    <p id="metric3Sub" class="text-xs text-slate-500 mt-0.5 sm:mt-1">฿0</p>
-                </div>
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
-            </div>
-
-            <div
-                class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
-                <div class="min-w-0">
-                    <p id="metric4Label"
-                        class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">เดือนล่าสุด
-                    </p>
-                    <h3 id="metric4Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
-                    <p id="metric4Sub" class="text-xs text-emerald-600 mt-0.5 sm:mt-1">฿0</p>
-                </div>
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
-                    <i class="fa-regular fa-calendar-check"></i>
-                </div>
-            </div>
+        <div class="relative w-full h-[260px] sm:h-auto sm:flex-1 flex flex-col">
+          <div class="my-auto h-full max-h-[500px]">
+            <canvas id="mainChart"></canvas>
+          </div>
         </div>
+      </div>
 
-        <!-- Form & Chart Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-
-            <!-- Entry Form -->
-            <div
-                class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 min-w-0">
-                            <i id="formHeaderIcon" class="fa-solid fa-circle-plus text-emerald-600 flex-shrink-0"></i>
-                            <span id="formTitle" class="truncate">บันทึกเงินเก็บประจำเดือน</span>
-                        </h2>
-                        <button id="cancelEditBtn" onclick="resetForm()" type="button"
-                            class="hidden text-xs text-rose-500 hover:text-rose-700 font-medium flex-shrink-0">
-                            <i class="fa-solid fa-xmark mr-1"></i>ยกเลิก
-                        </button>
-                    </div>
-
-                    <form id="mainForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกเดือน / ปี <span
-                                    class="text-rose-500">*</span></label>
-                            <input type="month" id="entryMonth" required onchange="handleMonthChange(this.value)"
-                                class="px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-100">
-                            <div class="flex justify-between items-center mb-2 gap-1">
-                                <label
-                                    class="text-xs font-semibold text-slate-600 truncate">ระบุจำนวนเงินสุทธิแยกตามประเภท
-                                    (บาท)</label>
-                                <button type="button" onclick="openCategoryModal()"
-                                    class="text-xs text-emerald-600 hover:underline flex-shrink-0">+
-                                    จัดการประเภท</button>
-                            </div>
-                            <div id="categoryInputsContainer" class="space-y-3 pr-1"></div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">หมายเหตุ /
-                                โน้ตย่อ <span class="text-slate-400 font-normal">(Optional)</span></label>
-                            <input type="text" id="entryNote" placeholder="ไม่มี"
-                                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
-                        </div>
-
-                        <div
-                            class="pt-3 border-t border-slate-100 flex justify-between items-center bg-slate-50 p-3 rounded-xl">
-                            <span class="text-xs font-semibold text-slate-600">รวมเดือนนี้:</span>
-                            <span id="monthlyFormTotal" class="text-base font-semibold text-emerald-600">฿0</span>
-                        </div>
-
-                        <button type="submit" id="submitBtn"
-                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm">
-                            <i class="fa-solid fa-floppy-disk"></i>
-                            <span id="submitBtnText">อัปเดต / บันทึกข้อมูล</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Multi-Year Chart -->
-            <div
-                class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 mb-4">
-                    <div>
-                        <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <i id="chartHeaderIcon" class="fa-solid fa-chart-column text-emerald-600"></i>
-                            กราฟแนวโน้มรายเดือน
-                        </h2>
-                        <p class="text-xs text-slate-500">แสดงมูลค่ารวมและสัดส่วน ณ สิ้นเดือน</p>
-                    </div>
-                    <select id="chartTypeSelect" onchange="updateChart()"
-                        class="bg-slate-100 border border-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none self-start sm:self-auto">
-                        <option value="stacked">กราฟแท่ง (Stacked)</option>
-                        <option value="line">กราฟเส้นแนวโน้ม (Trend Line)</option>
-                    </select>
-                </div>
-
-                <div class="relative w-full h-[260px] sm:h-auto sm:flex-1 flex flex-col">
-                    <div class="my-auto h-full max-h-[500px]">
-                        <canvas id="mainChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- History Table Section -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-            <div
-                class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
-                        <i id="tableHeaderIcon" class="fa-solid fa-table-list text-emerald-600"></i>
-                        ประวัติการอัปเดตยอดสุทธิ
-                    </h2>
-                    <p class="text-xs text-slate-500">ตารางแสดงรายการย้อนหลังและการเติบโตเทียบกับเดือนก่อนหน้า</p>
-                </div>
-                <input type="text" id="searchInput" oninput="renderTable()" placeholder="ค้นหาเดือน, หมายเหตุ..."
-                    class="px-3 py-1.5 border border-slate-200 text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 w-full sm:w-56 outline-none">
-            </div>
-
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 text-[11px] sm:text-xs font-semibold uppercase tracking-wider border-b border-slate-200"
-                            id="tableHeaderRow">
-                            <th class="p-3 sm:p-4">เดือน / ปี</th>
-                            <th class="p-3 sm:p-4 text-right">ยอดรวม</th>
-                            <th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th>
-                            <th class="p-3 sm:p-4">หมายเหตุ</th>
-                            <th class="p-3 sm:p-4 text-center">วันเวลาที่บันทึก</th>
-                            <th class="p-3 sm:p-4 text-center">จัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="mainTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
-            </div>
-            <div id="emptyTableState" class="hidden p-8 text-center text-slate-400">
-                <i class="fa-regular fa-folder-open text-3xl sm:text-4xl mb-2"></i>
-                <p class="text-xs sm:text-sm">ยังไม่มีข้อมูลในระบบ ให้เริ่มบันทึกจากฟอร์มด้านบนได้เลย</p>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Modal Category Management -->
-    <div id="categoryModal"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden">
-            <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 id="categoryModalTitle"
-                    class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-                    <i class="fa-solid fa-tags text-emerald-600"></i>
-                    จัดการประเภท
-                </h3>
-                <button onclick="closeCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600 p-1"><i
-                        class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <div class="p-4 sm:p-5 space-y-4">
-                <form onsubmit="handleAddCategory(event)" class="space-y-3 pb-4 border-b border-slate-100">
-                    <label class="block text-xs font-semibold text-slate-600">เพิ่มประเภทใหม่</label>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="newCatName" placeholder="ชื่อประเภท..." required
-                            class="flex-grow px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                        <input type="color" id="newCatColor" value="#10b981"
-                            class="w-9 h-9 border-0 rounded-xl cursor-pointer flex-shrink-0">
-                        <button type="submit"
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1 flex-shrink-0">
-                            <i class="fa-solid fa-plus"></i> เพิ่ม
-                        </button>
-                    </div>
-                </form>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-2">รายการประเภทปัจจุบัน</label>
-                    <div id="categoryListContainer"
-                        class="space-y-2 max-h-52 sm:max-h-60 overflow-y-auto custom-scrollbar pr-1"></div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Modal Edit Category -->
-    <div id="editCategoryModal"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full shadow-xl overflow-hidden">
-            <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
-                    แก้ไขประเภท
-                </h3>
-                <button onclick="closeEditCategoryModal()" type="button"
-                    class="text-slate-400 hover:text-slate-600 p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <form onsubmit="handleEditCategory(event)" class="p-4 sm:p-5 space-y-4">
-                <input type="hidden" id="editCatId">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อประเภท</label>
-                    <input type="text" id="editCatName" required
-                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">สีประจำประเภท</label>
-                    <div class="flex items-center gap-3">
-                        <input type="color" id="editCatColor"
-                            class="w-10 h-10 border-0 rounded-xl cursor-pointer flex-shrink-0">
-                        <span class="text-xs text-slate-500">เลือกสีสำหรับแสดงบนกราฟและรายการ</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeEditCategoryModal()"
-                        class="px-3 py-2 rounded-xl text-xs font-medium text-slate-500 hover:bg-slate-100 transition">
-                        ยกเลิก
-                    </button>
-                    <button type="submit"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition">
-                        บันทึกการแก้ไข
-                    </button>
-                </div>
-            </form>
+    <!-- History Table Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <i id="tableHeaderIcon" class="fa-solid fa-table-list text-emerald-600"></i>
+            ประวัติการอัปเดตยอดสุทธิ
+          </h2>
+          <p class="text-xs text-slate-500">ตารางแสดงรายการย้อนหลังและการเติบโตเทียบกับเดือนก่อนหน้า</p>
         </div>
+        <input type="text" id="searchInput" oninput="renderTable()" placeholder="ค้นหาเดือน, หมายเหตุ..."
+          class="px-3 py-1.5 border border-slate-200 text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 w-full sm:w-56 outline-none">
+      </div>
+
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr
+              class="bg-slate-50 text-slate-500 text-[11px] sm:text-xs font-semibold uppercase tracking-wider border-b border-slate-200"
+              id="tableHeaderRow">
+              <th class="p-3 sm:p-4">เดือน / ปี</th>
+              <th class="p-3 sm:p-4 text-right">ยอดรวม</th>
+              <th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th>
+              <th class="p-3 sm:p-4">หมายเหตุ</th>
+              <th class="p-3 sm:p-4 text-center">วันเวลาที่บันทึก</th>
+              <th class="p-3 sm:p-4 text-center">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="mainTableBody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+      <div id="emptyTableState" class="hidden p-8 text-center text-slate-400">
+        <i class="fa-regular fa-folder-open text-3xl sm:text-4xl mb-2"></i>
+        <p class="text-xs sm:text-sm">ยังไม่มีข้อมูลในระบบ ให้เริ่มบันทึกจากฟอร์มด้านบนได้เลย</p>
+      </div>
     </div>
 
-    <!-- Script Logic -->
-    <script>
-        let currentTab = 'savings'; // 'savings' | 'expenses'
+  </main>
 
-        let savingsCategories = [];
-        let savingsLogs = [];
-        let savingsDataMap = {};
+  <!-- Modal Category Management -->
+  <div id="categoryModal"
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <h3 id="categoryModalTitle" class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+          <i class="fa-solid fa-tags text-emerald-600"></i>
+          จัดการประเภท
+        </h3>
+        <button onclick="closeCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600 p-1"><i
+            class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
 
-        let expenseCategories = [];
-        let expenseLogs = [];
-        let expenseDataMap = {};
+      <div class="p-4 sm:p-5 space-y-4">
+        <form onsubmit="handleAddCategory(event)" class="space-y-3 pb-4 border-b border-slate-100">
+          <label class="block text-xs font-semibold text-slate-600">เพิ่มประเภทใหม่</label>
+          <div class="flex items-center gap-2">
+            <input type="text" id="newCatName" placeholder="ชื่อประเภท..." required
+              class="flex-grow px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="color" id="newCatColor" value="#10b981"
+              class="w-9 h-9 border-0 rounded-xl cursor-pointer flex-shrink-0">
+            <button type="submit"
+              class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1 flex-shrink-0">
+              <i class="fa-solid fa-plus"></i> เพิ่ม
+            </button>
+          </div>
+        </form>
 
-        let chartInstance = null;
-        const monthNamesThai = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-2">รายการประเภทปัจจุบัน</label>
+          <div id="categoryListContainer" class="space-y-2 max-h-52 sm:max-h-60 overflow-y-auto custom-scrollbar pr-1">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            document.getElementById('entryMonth').value = currentMonth;
-            await fetchAllData();
-            initChart();
-            renderActiveTab();
-            handleMonthChange(currentMonth);
+  <!-- Modal Edit Category -->
+  <div id="editCategoryModal"
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full shadow-xl overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <h3 class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
+          แก้ไขประเภท
+        </h3>
+        <button onclick="closeEditCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleEditCategory(event)" class="p-4 sm:p-5 space-y-4">
+        <input type="hidden" id="editCatId">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อประเภท</label>
+          <input type="text" id="editCatName" required
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">สีประจำประเภท</label>
+          <div class="flex items-center gap-3">
+            <input type="color" id="editCatColor" class="w-10 h-10 border-0 rounded-xl cursor-pointer flex-shrink-0">
+            <span class="text-xs text-slate-500">เลือกสีสำหรับแสดงบนกราฟและรายการ</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeEditCategoryModal()"
+            class="px-3 py-2 rounded-xl text-xs font-medium text-slate-500 hover:bg-slate-100 transition">
+            ยกเลิก
+          </button>
+          <button type="submit"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition">
+            บันทึกการแก้ไข
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Logic -->
+  <script>
+    let currentTab = 'savings'; // 'savings' | 'expenses'
+
+    let savingsCategories = [];
+    let savingsLogs = [];
+    let savingsDataMap = {};
+
+    let expenseCategories = [];
+    let expenseLogs = [];
+    let expenseDataMap = {};
+
+    let chartInstance = null;
+    const monthNamesThai = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      document.getElementById('entryMonth').value = currentMonth;
+      await fetchAllData();
+      initChart();
+      renderActiveTab();
+      handleMonthChange(currentMonth);
+    });
+
+    async function fetchAllData() {
+      try {
+        const [scRes, slRes, ecRes, elRes] = await Promise.all([
+          fetch('/api/categories'),
+          fetch('/api/logs'),
+          fetch('/api/expense-categories'),
+          fetch('/api/expense-logs')
+        ]);
+
+        savingsCategories = await scRes.json();
+        savingsLogs = await slRes.json();
+        expenseCategories = await ecRes.json();
+        expenseLogs = await elRes.json();
+
+        savingsDataMap = {};
+        if (Array.isArray(savingsLogs)) {
+          savingsLogs.forEach(l => {
+            const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
+            savingsDataMap[l.month] = { ...l, amounts: amounts || {}, total: Number(l.total) };
+          });
+        }
+
+        expenseDataMap = {};
+        if (Array.isArray(expenseLogs)) {
+          expenseLogs.forEach(l => {
+            const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
+            expenseDataMap[l.month] = { ...l, amounts: amounts || {}, total: Number(l.total) };
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const savingsBtn = document.getElementById('tabSavingsBtn');
+      const expenseBtn = document.getElementById('tabExpenseBtn');
+
+      if (tab === 'savings') {
+        savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm";
+        expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+      } else {
+        expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
+        savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+      }
+
+      resetForm();
+      renderActiveTab();
+    }
+
+    function renderActiveTab() {
+      const isSavings = currentTab === 'savings';
+
+      document.getElementById('activeModuleTitle').innerText = isSavings ? 'ระบบบันทึกเงินเก็บประจำเดือน' : 'ระบบบันทึกค่าใช้จ่ายรายเดือน';
+      document.getElementById('activeModuleSub').innerText = isSavings ? 'จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน' : 'ติดตามค่าใช้จ่ายและภาระผูกพันประจำเดือน';
+
+      document.getElementById('metric3Label').innerText = isSavings ? 'ประเภทสูงสุด (เดือนล่าสุด)' : 'หมวดสูงสุด (เดือนล่าสุด)';
+
+      document.getElementById('formTitle').innerText = isSavings ? 'บันทึกเงินเก็บประจำเดือน' : 'บันทึกค่าใช้จ่ายรายเดือน';
+      document.getElementById('formHeaderIcon').className = `fa-solid fa-circle-plus ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
+      document.getElementById('chartHeaderIcon').className = `fa-solid fa-chart-column ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
+      document.getElementById('tableHeaderIcon').className = `fa-solid fa-table-list ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.className = `w-full ${isSavings ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'} text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm`;
+
+      renderCategoryInputs();
+      renderTable();
+      updateMetrics();
+      updateChart();
+      handleMonthChange(document.getElementById('entryMonth').value);
+    }
+
+    function getCurrentCategories() {
+      return currentTab === 'savings' ? (Array.isArray(savingsCategories) ? savingsCategories : []) : (Array.isArray(expenseCategories) ? expenseCategories : []);
+    }
+
+    function getCurrentDataMap() {
+      return currentTab === 'savings' ? savingsDataMap : expenseDataMap;
+    }
+
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 2 }).format(amount || 0);
+    }
+
+    function formatMonthYear(monthKey) {
+      if (!monthKey) return '-';
+      const [year, month] = monthKey.split('-');
+      return `${monthNamesThai[parseInt(month) - 1]} ${parseInt(year) + 543}`;
+    }
+
+    function formatDateTime(isoStr) {
+      if (!isoStr) return '-';
+      const d = new Date(isoStr);
+      if (isNaN(d.getTime())) return '-';
+      return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function preventArrowKeys(e) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) {
+        e.preventDefault();
+      }
+    }
+
+    function preventScrollChange(e) {
+      e.target.blur();
+      e.preventDefault();
+    }
+
+    function maskNumberInput(val) {
+      if (!val) return '';
+      let cleanVal = val.replace(/[^0-9.]/g, '');
+      const parts = cleanVal.split('.');
+      if (parts.length > 2) {
+        cleanVal = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      let [integerPart, decimalPart] = cleanVal.split('.');
+      if (integerPart.length > 1) {
+        integerPart = integerPart.replace(/^0+/, '');
+        if (integerPart === '') integerPart = '0';
+      }
+
+      integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+      if (decimalPart !== undefined) {
+        decimalPart = decimalPart.slice(0, 2);
+        return `${integerPart}.${decimalPart}`;
+      }
+
+      return integerPart;
+    }
+
+    function parseInputValue(val) {
+      if (!val) return 0;
+      const cleanVal = val.toString().replace(/,/g, '');
+      const parsed = parseFloat(cleanVal);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
+    function formatDisplayValue(num) {
+      if (num === undefined || num === null || num === '' || num === 0) return '';
+      const n = parseFloat(num);
+      if (isNaN(n) || n === 0) return '';
+      return maskNumberInput(n.toString());
+    }
+
+    function handleInputMask(input) {
+      const masked = maskNumberInput(input.value);
+      input.value = masked;
+      calculateFormTotal();
+    }
+
+    function handleMonthChange(selectedMonth) {
+      if (!selectedMonth) return;
+      const dataMap = getCurrentDataMap();
+      const record = dataMap[selectedMonth];
+
+      if (record) {
+        document.getElementById('entryNote').value = record.note || '';
+        document.querySelectorAll('.category-amount-input').forEach(input => {
+          const val = record.amounts && record.amounts[input.dataset.catId] !== undefined ? record.amounts[input.dataset.catId] : '';
+          input.value = formatDisplayValue(val);
         });
+        document.getElementById('submitBtnText').innerText = 'อัปเดตยอดเดือนนี้';
+      } else {
+        const sortedMonths = Object.keys(dataMap).sort();
+        const latestMonthKey = sortedMonths.length > 0 ? sortedMonths[sortedMonths.length - 1] : null;
+        const latestRecord = latestMonthKey ? dataMap[latestMonthKey] : null;
 
-        async function fetchAllData() {
-            try {
-                const [scRes, slRes, ecRes, elRes] = await Promise.all([
-                    fetch('/api/categories'),
-                    fetch('/api/logs'),
-                    fetch('/api/expense-categories'),
-                    fetch('/api/expense-logs')
-                ]);
+        document.getElementById('entryNote').value = '';
+        document.querySelectorAll('.category-amount-input').forEach(input => {
+          const catId = input.dataset.catId;
+          const initVal = (latestRecord && latestRecord.amounts && latestRecord.amounts[catId] !== undefined) ? latestRecord.amounts[catId] : '';
+          input.value = formatDisplayValue(initVal);
+        });
+        document.getElementById('submitBtnText').innerText = 'บันทึกข้อมูลใหม่';
+      }
+      calculateFormTotal();
+    }
 
-                savingsCategories = await scRes.json();
-                savingsLogs = await slRes.json();
-                expenseCategories = await ecRes.json();
-                expenseLogs = await elRes.json();
+    function renderCategoryInputs() {
+      const categories = getCurrentCategories();
+      const container = document.getElementById('categoryInputsContainer');
+      container.innerHTML = '';
 
-                savingsDataMap = {};
-                if (Array.isArray(savingsLogs)) {
-                    savingsLogs.forEach(l => {
-                        const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
-                        savingsDataMap[l.month] = { ...l, amounts: amounts || {}, total: Number(l.total) };
-                    });
-                }
+      if (categories.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 py-2 text-center">ยังไม่มีประเภทข้อมูล กด "+ จัดการประเภท" เพื่อเริ่มสร้าง</p>`;
+        calculateFormTotal();
+        return;
+      }
 
-                expenseDataMap = {};
-                if (Array.isArray(expenseLogs)) {
-                    expenseLogs.forEach(l => {
-                        const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
-                        expenseDataMap[l.month] = { ...l, amounts: amounts || {}, total: Number(l.total) };
-                    });
-                }
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            }
-        }
-
-        function switchTab(tab) {
-            currentTab = tab;
-            const savingsBtn = document.getElementById('tabSavingsBtn');
-            const expenseBtn = document.getElementById('tabExpenseBtn');
-
-            if (tab === 'savings') {
-                savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm";
-                expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
-            } else {
-                expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
-                savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
-            }
-
-            resetForm();
-            renderActiveTab();
-        }
-
-        function renderActiveTab() {
-            const isSavings = currentTab === 'savings';
-
-            document.getElementById('activeModuleTitle').innerText = isSavings ? 'ระบบบันทึกเงินเก็บประจำเดือน' : 'ระบบบันทึกค่าใช้จ่ายรายเดือน';
-            document.getElementById('activeModuleSub').innerText = isSavings ? 'จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน' : 'ติดตามค่าใช้จ่ายและภาระผูกพันประจำเดือน';
-
-            document.getElementById('metric3Label').innerText = isSavings ? 'ประเภทสูงสุด (เดือนล่าสุด)' : 'หมวดสูงสุด (เดือนล่าสุด)';
-
-            document.getElementById('formTitle').innerText = isSavings ? 'บันทึกเงินเก็บประจำเดือน' : 'บันทึกค่าใช้จ่ายรายเดือน';
-            document.getElementById('formHeaderIcon').className = `fa-solid fa-circle-plus ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
-            document.getElementById('chartHeaderIcon').className = `fa-solid fa-chart-column ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
-            document.getElementById('tableHeaderIcon').className = `fa-solid fa-table-list ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.className = `w-full ${isSavings ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'} text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm`;
-
-            renderCategoryInputs();
-            renderTable();
-            updateMetrics();
-            updateChart();
-            handleMonthChange(document.getElementById('entryMonth').value);
-        }
-
-        function getCurrentCategories() {
-            return currentTab === 'savings' ? (Array.isArray(savingsCategories) ? savingsCategories : []) : (Array.isArray(expenseCategories) ? expenseCategories : []);
-        }
-
-        function getCurrentDataMap() {
-            return currentTab === 'savings' ? savingsDataMap : expenseDataMap;
-        }
-
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 2 }).format(amount || 0);
-        }
-
-        function formatMonthYear(monthKey) {
-            if (!monthKey) return '-';
-            const [year, month] = monthKey.split('-');
-            return `${monthNamesThai[parseInt(month) - 1]} ${parseInt(year) + 543}`;
-        }
-
-        function formatDateTime(isoStr) {
-            if (!isoStr) return '-';
-            const d = new Date(isoStr);
-            if (isNaN(d.getTime())) return '-';
-            return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function preventArrowKeys(e) {
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) {
-                e.preventDefault();
-            }
-        }
-
-        function preventScrollChange(e) {
-            e.target.blur();
-            e.preventDefault();
-        }
-
-        function maskNumberInput(val) {
-            if (!val) return '';
-            let cleanVal = val.replace(/[^0-9.]/g, '');
-            const parts = cleanVal.split('.');
-            if (parts.length > 2) {
-                cleanVal = parts[0] + '.' + parts.slice(1).join('');
-            }
-
-            let [integerPart, decimalPart] = cleanVal.split('.');
-            if (integerPart.length > 1) {
-                integerPart = integerPart.replace(/^0+/, '');
-                if (integerPart === '') integerPart = '0';
-            }
-
-            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-            if (decimalPart !== undefined) {
-                decimalPart = decimalPart.slice(0, 2);
-                return `${integerPart}.${decimalPart}`;
-            }
-
-            return integerPart;
-        }
-
-        function parseInputValue(val) {
-            if (!val) return 0;
-            const cleanVal = val.toString().replace(/,/g, '');
-            const parsed = parseFloat(cleanVal);
-            return isNaN(parsed) ? 0 : parsed;
-        }
-
-        function formatDisplayValue(num) {
-            if (num === undefined || num === null || num === '' || num === 0) return '';
-            const n = parseFloat(num);
-            if (isNaN(n) || n === 0) return '';
-            return maskNumberInput(n.toString());
-        }
-
-        function handleInputMask(input) {
-            const masked = maskNumberInput(input.value);
-            input.value = masked;
-            calculateFormTotal();
-        }
-
-        function handleMonthChange(selectedMonth) {
-            if (!selectedMonth) return;
-            const dataMap = getCurrentDataMap();
-            const record = dataMap[selectedMonth];
-
-            if (record) {
-                document.getElementById('entryNote').value = record.note || '';
-                document.querySelectorAll('.category-amount-input').forEach(input => {
-                    const val = record.amounts && record.amounts[input.dataset.catId] !== undefined ? record.amounts[input.dataset.catId] : '';
-                    input.value = formatDisplayValue(val);
-                });
-                document.getElementById('submitBtnText').innerText = 'อัปเดตยอดเดือนนี้';
-            } else {
-                const sortedMonths = Object.keys(dataMap).sort();
-                const latestMonthKey = sortedMonths.length > 0 ? sortedMonths[sortedMonths.length - 1] : null;
-                const latestRecord = latestMonthKey ? dataMap[latestMonthKey] : null;
-
-                document.getElementById('entryNote').value = '';
-                document.querySelectorAll('.category-amount-input').forEach(input => {
-                    const catId = input.dataset.catId;
-                    const initVal = (latestRecord && latestRecord.amounts && latestRecord.amounts[catId] !== undefined) ? latestRecord.amounts[catId] : '';
-                    input.value = formatDisplayValue(initVal);
-                });
-                document.getElementById('submitBtnText').innerText = 'บันทึกข้อมูลใหม่';
-            }
-            calculateFormTotal();
-        }
-
-        function renderCategoryInputs() {
-            const categories = getCurrentCategories();
-            const container = document.getElementById('categoryInputsContainer');
-            container.innerHTML = '';
-
-            if (categories.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 py-2 text-center">ยังไม่มีประเภทข้อมูล กด "+ จัดการประเภท" เพื่อเริ่มสร้าง</p>`;
-                calculateFormTotal();
-                return;
-            }
-
-            categories.forEach(cat => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between gap-2 bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/60';
-                div.innerHTML = `
+      categories.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between gap-2 bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/60';
+        div.innerHTML = `
                     <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
                         <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
                         <span class="text-xs font-medium text-slate-700 truncate">${cat.name}</span>
@@ -571,251 +567,251 @@
                            onwheel="preventScrollChange(event)"
                            class="category-amount-input w-28 sm:w-36 text-right px-2 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none flex-shrink-0">
                 `;
-                container.appendChild(div);
-            });
-            calculateFormTotal();
+        container.appendChild(div);
+      });
+      calculateFormTotal();
+    }
+
+    function calculateFormTotal() {
+      let total = 0;
+      document.querySelectorAll('.category-amount-input').forEach(input => total += parseInputValue(input.value));
+      const totalEl = document.getElementById('monthlyFormTotal');
+      totalEl.innerText = formatCurrency(total);
+      totalEl.className = `text-base font-semibold ${currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600'}`;
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const month = document.getElementById('entryMonth').value;
+      const note = document.getElementById('entryNote').value.trim() || null;
+      const amounts = {};
+      let total = 0;
+
+      document.querySelectorAll('.category-amount-input').forEach(input => {
+        const val = parseInputValue(input.value);
+        amounts[input.dataset.catId] = val;
+        total += val;
+      });
+
+      const endpoint = currentTab === 'savings' ? '/api/logs' : '/api/expense-logs';
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ month, amounts, total, note })
+      });
+
+      await fetchAllData();
+      renderActiveTab();
+    }
+
+    function resetForm() {
+      document.getElementById('mainForm').reset();
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      document.getElementById('entryMonth').value = currentMonth;
+      document.getElementById('cancelEditBtn').classList.add('hidden');
+      document.getElementById('formTitle').innerText = currentTab === 'savings' ? 'บันทึกเงินเก็บประจำเดือน' : 'บันทึกค่าใช้จ่ายรายเดือน';
+      handleMonthChange(currentMonth);
+    }
+
+    function editRecord(monthKey) {
+      document.getElementById('entryMonth').value = monthKey;
+      handleMonthChange(monthKey);
+
+      document.getElementById('formTitle').innerText = `แก้ไขข้อมูล (${formatMonthYear(monthKey)})`;
+      document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deleteRecord(monthKey) {
+      if (confirm(`คุณต้องการลบข้อมูลเดือน ${formatMonthYear(monthKey)} หรือไม่?`)) {
+        const endpoint = currentTab === 'savings' ? `/api/logs/${monthKey}` : `/api/expense-logs/${monthKey}`;
+        await fetch(endpoint, { method: 'DELETE' });
+        await fetchAllData();
+        renderActiveTab();
+      }
+    }
+
+    function updateMetrics() {
+      const dataMap = getCurrentDataMap();
+      const categories = getCurrentCategories();
+      const sortedMonths = Object.keys(dataMap).sort();
+      const totalMonths = sortedMonths.length;
+
+      if (totalMonths === 0) {
+        document.getElementById('metric3Value').innerText = '-';
+        document.getElementById('metric3Sub').innerText = '฿0';
+        document.getElementById('metric4Value').innerText = '-';
+        document.getElementById('metric4Sub').innerText = '฿0';
+        return;
+      }
+
+      const latestMonthKey = sortedMonths[sortedMonths.length - 1];
+      const latestRecord = dataMap[latestMonthKey];
+
+      const latestTotal = latestRecord.total;
+
+      let topCatId = null, maxAmt = -1;
+      if (latestRecord.amounts) {
+        Object.keys(latestRecord.amounts).forEach(cId => {
+          const amt = latestRecord.amounts[cId] || 0;
+          if (amt > maxAmt) { maxAmt = amt; topCatId = cId; }
+        });
+      }
+
+      const topCatObj = categories.find(c => c.id === topCatId);
+      document.getElementById('metric3Value').innerText = topCatObj && maxAmt > 0 ? topCatObj.name : '-';
+      document.getElementById('metric3Sub').innerText = topCatObj && maxAmt > 0 ? formatCurrency(maxAmt) : '฿0';
+
+      document.getElementById('metric4Value').innerText = formatMonthYear(latestMonthKey);
+      document.getElementById('metric4Sub').innerText = formatCurrency(latestTotal);
+    }
+
+    function renderTable() {
+      const headerRow = document.getElementById('tableHeaderRow');
+      const tbody = document.getElementById('mainTableBody');
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const categories = getCurrentCategories();
+      const dataMap = getCurrentDataMap();
+
+      headerRow.innerHTML = `<th class="p-3 sm:p-4">เดือน / ปี</th>`;
+      categories.forEach(cat => headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">${cat.name}</th>`);
+      headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">ยอดรวม</th><th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th><th class="p-3 sm:p-4">หมายเหตุ</th><th class="p-3 sm:p-4 text-center">วันเวลาบันทึก</th><th class="p-3 sm:p-4 text-center">จัดการ</th>`;
+
+      tbody.innerHTML = '';
+      const sortedMonthsAsc = Object.keys(dataMap).sort();
+      const sortedMonthsDesc = [...sortedMonthsAsc].reverse();
+
+      let filteredMonths = sortedMonthsDesc.filter(mKey => {
+        const rec = dataMap[mKey];
+        const noteMatch = (rec.note || '').toLowerCase().includes(searchQuery);
+        const monthMatch = formatMonthYear(mKey).toLowerCase().includes(searchQuery) || mKey.includes(searchQuery);
+        return noteMatch || monthMatch;
+      });
+
+      if (filteredMonths.length === 0) {
+        document.getElementById('emptyTableState').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('emptyTableState').classList.add('hidden');
+
+      filteredMonths.forEach(mKey => {
+        const record = dataMap[mKey];
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 text-slate-700';
+
+        let rowHTML = `<td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap">${formatMonthYear(mKey)}</td>`;
+
+        categories.forEach(cat => {
+          const amt = record.amounts ? (record.amounts[cat.id] || 0) : 0;
+          rowHTML += `<td class="p-3 sm:p-4 text-right font-mono text-slate-600">${amt > 0 ? formatCurrency(amt) : '-'}</td>`;
+        });
+
+        const totalColorClass = currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600';
+        rowHTML += `<td class="p-3 sm:p-4 text-right font-semibold font-mono ${totalColorClass}">${formatCurrency(record.total)}</td>`;
+
+        const currentIndex = sortedMonthsAsc.indexOf(mKey);
+        let diffBadge = `<span class="text-xs text-slate-400">-</span>`;
+        if (currentIndex > 0) {
+          const prevKey = sortedMonthsAsc[currentIndex - 1];
+          const diff = record.total - dataMap[prevKey].total;
+          if (diff > 0) {
+            const bg = currentTab === 'savings' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600';
+            diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-up mr-1"></i>+${formatCurrency(diff)}</span>`;
+          } else if (diff < 0) {
+            const bg = currentTab === 'savings' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600';
+            diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-down mr-1"></i>${formatCurrency(diff)}</span>`;
+          } else {
+            diffBadge = `<span class="text-[11px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">เท่าเดิม</span>`;
+          }
         }
 
-        function calculateFormTotal() {
-            let total = 0;
-            document.querySelectorAll('.category-amount-input').forEach(input => total += parseInputValue(input.value));
-            const totalEl = document.getElementById('monthlyFormTotal');
-            totalEl.innerText = formatCurrency(total);
-            totalEl.className = `text-base font-semibold ${currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600'}`;
-        }
-
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            const month = document.getElementById('entryMonth').value;
-            const note = document.getElementById('entryNote').value.trim() || null;
-            const amounts = {};
-            let total = 0;
-
-            document.querySelectorAll('.category-amount-input').forEach(input => {
-                const val = parseInputValue(input.value);
-                amounts[input.dataset.catId] = val;
-                total += val;
-            });
-
-            const endpoint = currentTab === 'savings' ? '/api/logs' : '/api/expense-logs';
-            await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ month, amounts, total, note })
-            });
-
-            await fetchAllData();
-            renderActiveTab();
-        }
-
-        function resetForm() {
-            document.getElementById('mainForm').reset();
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            document.getElementById('entryMonth').value = currentMonth;
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-            document.getElementById('formTitle').innerText = currentTab === 'savings' ? 'บันทึกเงินเก็บประจำเดือน' : 'บันทึกค่าใช้จ่ายรายเดือน';
-            handleMonthChange(currentMonth);
-        }
-
-        function editRecord(monthKey) {
-            document.getElementById('entryMonth').value = monthKey;
-            handleMonthChange(monthKey);
-
-            document.getElementById('formTitle').innerText = `แก้ไขข้อมูล (${formatMonthYear(monthKey)})`;
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        async function deleteRecord(monthKey) {
-            if (confirm(`คุณต้องการลบข้อมูลเดือน ${formatMonthYear(monthKey)} หรือไม่?`)) {
-                const endpoint = currentTab === 'savings' ? `/api/logs/${monthKey}` : `/api/expense-logs/${monthKey}`;
-                await fetch(endpoint, { method: 'DELETE' });
-                await fetchAllData();
-                renderActiveTab();
-            }
-        }
-
-        function updateMetrics() {
-            const dataMap = getCurrentDataMap();
-            const categories = getCurrentCategories();
-            const sortedMonths = Object.keys(dataMap).sort();
-            const totalMonths = sortedMonths.length;
-
-            if (totalMonths === 0) {
-                document.getElementById('metric3Value').innerText = '-';
-                document.getElementById('metric3Sub').innerText = '฿0';
-                document.getElementById('metric4Value').innerText = '-';
-                document.getElementById('metric4Sub').innerText = '฿0';
-                return;
-            }
-
-            const latestMonthKey = sortedMonths[sortedMonths.length - 1];
-            const latestRecord = dataMap[latestMonthKey];
-
-            const latestTotal = latestRecord.total;
-
-            let topCatId = null, maxAmt = -1;
-            if (latestRecord.amounts) {
-                Object.keys(latestRecord.amounts).forEach(cId => {
-                    const amt = latestRecord.amounts[cId] || 0;
-                    if (amt > maxAmt) { maxAmt = amt; topCatId = cId; }
-                });
-            }
-
-            const topCatObj = categories.find(c => c.id === topCatId);
-            document.getElementById('metric3Value').innerText = topCatObj && maxAmt > 0 ? topCatObj.name : '-';
-            document.getElementById('metric3Sub').innerText = topCatObj && maxAmt > 0 ? formatCurrency(maxAmt) : '฿0';
-
-            document.getElementById('metric4Value').innerText = formatMonthYear(latestMonthKey);
-            document.getElementById('metric4Sub').innerText = formatCurrency(latestTotal);
-        }
-
-        function renderTable() {
-            const headerRow = document.getElementById('tableHeaderRow');
-            const tbody = document.getElementById('mainTableBody');
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const categories = getCurrentCategories();
-            const dataMap = getCurrentDataMap();
-
-            headerRow.innerHTML = `<th class="p-3 sm:p-4">เดือน / ปี</th>`;
-            categories.forEach(cat => headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">${cat.name}</th>`);
-            headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">ยอดรวม</th><th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th><th class="p-3 sm:p-4">หมายเหตุ</th><th class="p-3 sm:p-4 text-center">วันเวลาบันทึก</th><th class="p-3 sm:p-4 text-center">จัดการ</th>`;
-
-            tbody.innerHTML = '';
-            const sortedMonthsAsc = Object.keys(dataMap).sort();
-            const sortedMonthsDesc = [...sortedMonthsAsc].reverse();
-
-            let filteredMonths = sortedMonthsDesc.filter(mKey => {
-                const rec = dataMap[mKey];
-                const noteMatch = (rec.note || '').toLowerCase().includes(searchQuery);
-                const monthMatch = formatMonthYear(mKey).toLowerCase().includes(searchQuery) || mKey.includes(searchQuery);
-                return noteMatch || monthMatch;
-            });
-
-            if (filteredMonths.length === 0) {
-                document.getElementById('emptyTableState').classList.remove('hidden');
-                return;
-            }
-            document.getElementById('emptyTableState').classList.add('hidden');
-
-            filteredMonths.forEach(mKey => {
-                const record = dataMap[mKey];
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 text-slate-700';
-
-                let rowHTML = `<td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap">${formatMonthYear(mKey)}</td>`;
-
-                categories.forEach(cat => {
-                    const amt = record.amounts ? (record.amounts[cat.id] || 0) : 0;
-                    rowHTML += `<td class="p-3 sm:p-4 text-right font-mono text-slate-600">${amt > 0 ? formatCurrency(amt) : '-'}</td>`;
-                });
-
-                const totalColorClass = currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600';
-                rowHTML += `<td class="p-3 sm:p-4 text-right font-semibold font-mono ${totalColorClass}">${formatCurrency(record.total)}</td>`;
-
-                const currentIndex = sortedMonthsAsc.indexOf(mKey);
-                let diffBadge = `<span class="text-xs text-slate-400">-</span>`;
-                if (currentIndex > 0) {
-                    const prevKey = sortedMonthsAsc[currentIndex - 1];
-                    const diff = record.total - dataMap[prevKey].total;
-                    if (diff > 0) {
-                        const bg = currentTab === 'savings' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600';
-                        diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-up mr-1"></i>+${formatCurrency(diff)}</span>`;
-                    } else if (diff < 0) {
-                        const bg = currentTab === 'savings' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600';
-                        diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-down mr-1"></i>${formatCurrency(diff)}</span>`;
-                    } else {
-                        diffBadge = `<span class="text-[11px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">เท่าเดิม</span>`;
-                    }
-                }
-
-                rowHTML += `<td class="p-3 sm:p-4 text-center whitespace-nowrap">${diffBadge}</td>`;
-                rowHTML += `<td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] sm:max-w-[200px] truncate" title="${record.note || ''}">${record.note || '-'}</td>`;
-                rowHTML += `<td class="p-3 sm:p-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDateTime(record.updated_at)}</td>`;
-                rowHTML += `
+        rowHTML += `<td class="p-3 sm:p-4 text-center whitespace-nowrap">${diffBadge}</td>`;
+        rowHTML += `<td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] sm:max-w-[200px] truncate" title="${record.note || ''}">${record.note || '-'}</td>`;
+        rowHTML += `<td class="p-3 sm:p-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDateTime(record.updated_at)}</td>`;
+        rowHTML += `
                     <td class="p-3 sm:p-4 text-center whitespace-nowrap">
                         <button onclick="editRecord('${mKey}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-1.5 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button onclick="deleteRecord('${mKey}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
-                tr.innerHTML = rowHTML;
-                tbody.appendChild(tr);
-            });
+        tr.innerHTML = rowHTML;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: getChartData('stacked'),
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit', size: 11 }, usePointStyle: true } } },
+          scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => '฿' + v.toLocaleString() } } }
         }
+      });
+    }
 
-        function initChart() {
-            const ctx = document.getElementById('mainChart').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: getChartData('stacked'),
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit', size: 11 }, usePointStyle: true } } },
-                    scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => '฿' + v.toLocaleString() } } }
-                }
-            });
-        }
+    function getChartData(chartType) {
+      const dataMap = getCurrentDataMap();
+      const categories = getCurrentCategories();
+      const sortedMonths = Object.keys(dataMap).sort();
+      const labels = sortedMonths.map(mKey => formatMonthYear(mKey));
 
-        function getChartData(chartType) {
-            const dataMap = getCurrentDataMap();
-            const categories = getCurrentCategories();
-            const sortedMonths = Object.keys(dataMap).sort();
-            const labels = sortedMonths.map(mKey => formatMonthYear(mKey));
+      if (chartType === 'line') {
+        const lineThemeColor = currentTab === 'savings' ? '#10b981' : '#ef4444';
+        return {
+          labels,
+          datasets: [{
+            label: currentTab === 'savings' ? 'ยอดเงินเก็บรวม' : 'ยอดค่าใช้จ่ายรวม',
+            data: sortedMonths.map(mKey => dataMap[mKey].total),
+            borderColor: lineThemeColor,
+            backgroundColor: lineThemeColor + '20',
+            fill: true,
+            tension: 0.3
+          }]
+        };
+      }
 
-            if (chartType === 'line') {
-                const lineThemeColor = currentTab === 'savings' ? '#10b981' : '#ef4444';
-                return {
-                    labels,
-                    datasets: [{
-                        label: currentTab === 'savings' ? 'ยอดเงินเก็บรวม' : 'ยอดค่าใช้จ่ายรวม',
-                        data: sortedMonths.map(mKey => dataMap[mKey].total),
-                        borderColor: lineThemeColor,
-                        backgroundColor: lineThemeColor + '20',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                };
-            }
+      return {
+        labels,
+        datasets: categories.map(cat => ({
+          label: cat.name,
+          data: sortedMonths.map(mKey => (dataMap[mKey].amounts ? dataMap[mKey].amounts[cat.id] || 0 : 0)),
+          backgroundColor: cat.color,
+          borderRadius: 4
+        }))
+      };
+    }
 
-            return {
-                labels,
-                datasets: categories.map(cat => ({
-                    label: cat.name,
-                    data: sortedMonths.map(mKey => (dataMap[mKey].amounts ? dataMap[mKey].amounts[cat.id] || 0 : 0)),
-                    backgroundColor: cat.color,
-                    borderRadius: 4
-                }))
-            };
-        }
+    function updateChart() {
+      if (!chartInstance) return;
+      const chartType = document.getElementById('chartTypeSelect').value;
+      chartInstance.config.type = chartType === 'line' ? 'line' : 'bar';
+      chartInstance.data = getChartData(chartType);
+      chartInstance.options.scales.x.stacked = (chartType !== 'line');
+      chartInstance.options.scales.y.stacked = (chartType !== 'line');
+      chartInstance.update();
+    }
 
-        function updateChart() {
-            if (!chartInstance) return;
-            const chartType = document.getElementById('chartTypeSelect').value;
-            chartInstance.config.type = chartType === 'line' ? 'line' : 'bar';
-            chartInstance.data = getChartData(chartType);
-            chartInstance.options.scales.x.stacked = (chartType !== 'line');
-            chartInstance.options.scales.y.stacked = (chartType !== 'line');
-            chartInstance.update();
-        }
+    function openCategoryModal() {
+      renderCategoryListModal();
+      document.getElementById('categoryModalTitle').innerText = currentTab === 'savings' ? 'จัดการประเภทเงินเก็บ' : 'จัดการประเภทค่าใช้จ่าย';
+      document.getElementById('categoryModal').classList.remove('hidden');
+    }
 
-        function openCategoryModal() {
-            renderCategoryListModal();
-            document.getElementById('categoryModalTitle').innerText = currentTab === 'savings' ? 'จัดการประเภทเงินเก็บ' : 'จัดการประเภทค่าใช้จ่าย';
-            document.getElementById('categoryModal').classList.remove('hidden');
-        }
+    function closeCategoryModal() { document.getElementById('categoryModal').classList.add('hidden'); }
 
-        function closeCategoryModal() { document.getElementById('categoryModal').classList.add('hidden'); }
-
-        function renderCategoryListModal() {
-            const categories = getCurrentCategories();
-            const container = document.getElementById('categoryListContainer');
-            container.innerHTML = '';
-            categories.forEach(cat => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-200';
-                div.innerHTML = `
+    function renderCategoryListModal() {
+      const categories = getCurrentCategories();
+      const container = document.getElementById('categoryListContainer');
+      container.innerHTML = '';
+      categories.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-200';
+        div.innerHTML = `
                     <div class="flex items-center gap-2">
                         <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
                         <span class="text-xs sm:text-sm font-medium text-slate-700">${cat.name}</span>
@@ -829,82 +825,82 @@
                         </button>
                     </div>
                 `;
-                container.appendChild(div);
-            });
-        }
+        container.appendChild(div);
+      });
+    }
 
-        async function handleAddCategory(e) {
-            e.preventDefault();
-            const id = 'cat_' + Date.now();
-            const name = document.getElementById('newCatName').value.trim();
-            const color = document.getElementById('newCatColor').value;
+    async function handleAddCategory(e) {
+      e.preventDefault();
+      const id = 'cat_' + Date.now();
+      const name = document.getElementById('newCatName').value.trim();
+      const color = document.getElementById('newCatColor').value;
 
-            const endpoint = currentTab === 'savings' ? '/api/categories' : '/api/expense-categories';
-            await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, name, color })
-            });
+      const endpoint = currentTab === 'savings' ? '/api/categories' : '/api/expense-categories';
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name, color })
+      });
 
-            document.getElementById('newCatName').value = '';
-            await fetchAllData();
-            renderActiveTab();
-            renderCategoryListModal();
-        }
+      document.getElementById('newCatName').value = '';
+      await fetchAllData();
+      renderActiveTab();
+      renderCategoryListModal();
+    }
 
-        function openEditCategoryModal(catId) {
-            const categories = getCurrentCategories();
-            const cat = categories.find(c => c.id === catId);
-            if (!cat) return;
+    function openEditCategoryModal(catId) {
+      const categories = getCurrentCategories();
+      const cat = categories.find(c => c.id === catId);
+      if (!cat) return;
 
-            document.getElementById('editCatId').value = cat.id;
-            document.getElementById('editCatName').value = cat.name;
-            document.getElementById('editCatColor').value = cat.color;
+      document.getElementById('editCatId').value = cat.id;
+      document.getElementById('editCatName').value = cat.name;
+      document.getElementById('editCatColor').value = cat.color;
 
-            document.getElementById('editCategoryModal').classList.remove('hidden');
-        }
+      document.getElementById('editCategoryModal').classList.remove('hidden');
+    }
 
-        function closeEditCategoryModal() {
-            document.getElementById('editCategoryModal').classList.add('hidden');
-        }
+    function closeEditCategoryModal() {
+      document.getElementById('editCategoryModal').classList.add('hidden');
+    }
 
-        async function handleEditCategory(e) {
-            e.preventDefault();
-            const id = document.getElementById('editCatId').value;
-            const name = document.getElementById('editCatName').value.trim();
-            const color = document.getElementById('editCatColor').value;
+    async function handleEditCategory(e) {
+      e.preventDefault();
+      const id = document.getElementById('editCatId').value;
+      const name = document.getElementById('editCatName').value.trim();
+      const color = document.getElementById('editCatColor').value;
 
-            const endpoint = currentTab === 'savings' ? `/api/categories/${id}` : `/api/expense-categories/${id}`;
+      const endpoint = currentTab === 'savings' ? `/api/categories/${id}` : `/api/expense-categories/${id}`;
 
-            try {
-                await fetch(endpoint, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, name, color })
-                });
+      try {
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, name, color })
+        });
 
-                closeEditCategoryModal();
-                await fetchAllData();
-                renderActiveTab();
-                renderCategoryListModal();
-            } catch (err) {
-                console.error("Error updating category:", err);
-                alert("ไม่สามารถบันทึกการแก้ไขได้");
-            }
-        }
+        closeEditCategoryModal();
+        await fetchAllData();
+        renderActiveTab();
+        renderCategoryListModal();
+      } catch (err) {
+        console.error("Error updating category:", err);
+        alert("ไม่สามารถบันทึกการแก้ไขได้");
+      }
+    }
 
-        async function deleteCategory(catId) {
-            const categories = getCurrentCategories();
-            if (categories.length <= 1) return alert('ต้องมีอย่างน้อย 1 ประเภทในระบบ');
-            if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบประเภทนี้?')) {
-                const endpoint = currentTab === 'savings' ? `/api/categories/${catId}` : `/api/expense-categories/${catId}`;
-                await fetch(endpoint, { method: 'DELETE' });
-                await fetchAllData();
-                renderActiveTab();
-                renderCategoryListModal();
-            }
-        }
-    </script>
+    async function deleteCategory(catId) {
+      const categories = getCurrentCategories();
+      if (categories.length <= 1) return alert('ต้องมีอย่างน้อย 1 ประเภทในระบบ');
+      if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบประเภทนี้?')) {
+        const endpoint = currentTab === 'savings' ? `/api/categories/${catId}` : `/api/expense-categories/${catId}`;
+        await fetch(endpoint, { method: 'DELETE' });
+        await fetchAllData();
+        renderActiveTab();
+        renderCategoryListModal();
+      }
+    }
+  </script>
 </body>
 
 </html>
