@@ -134,7 +134,7 @@
             <!-- Entry Form -->
             <div
                 class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                <div class="overflow-hidden">
+                <div>
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 min-w-0">
                             <i id="formHeaderIcon" class="fa-solid fa-circle-plus text-emerald-600 flex-shrink-0"></i>
@@ -151,7 +151,7 @@
                             <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกเดือน / ปี <span
                                     class="text-rose-500">*</span></label>
                             <input type="month" id="entryMonth" required onchange="handleMonthChange(this.value)"
-                                class="w-full max-w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+                                class="px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
                         </div>
 
                         <div class="pt-2 border-t border-slate-100">
@@ -169,7 +169,7 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">หมายเหตุ /
                                 โน้ตย่อ <span class="text-slate-400 font-normal">(Optional)</span></label>
-                            <input type="text" id="entryNote" placeholder="เช่น โบนัสออก, ปรับพอร์ตหุ้น"
+                            <input type="text" id="entryNote" placeholder="ไม่มี"
                                 class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
                         </div>
 
@@ -254,7 +254,7 @@
 
     </main>
 
-    <!-- Modal Category -->
+    <!-- Modal Category Management -->
     <div id="categoryModal"
         class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden">
@@ -289,6 +289,50 @@
                         class="space-y-2 max-h-52 sm:max-h-60 overflow-y-auto custom-scrollbar pr-1"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Category -->
+    <div id="editCategoryModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full shadow-xl overflow-hidden">
+            <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
+                    แก้ไขประเภท
+                </h3>
+                <button onclick="closeEditCategoryModal()" type="button"
+                    class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleEditCategory(event)" class="p-4 sm:p-5 space-y-4">
+                <input type="hidden" id="editCatId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อประเภท</label>
+                    <input type="text" id="editCatName" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">สีประจำประเภท</label>
+                    <div class="flex items-center gap-3">
+                        <input type="color" id="editCatColor"
+                            class="w-10 h-10 border-0 rounded-xl cursor-pointer flex-shrink-0">
+                        <span class="text-xs text-slate-500">เลือกสีสำหรับแสดงบนกราฟและรายการ</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeEditCategoryModal()"
+                        class="px-3 py-2 rounded-xl text-xs font-medium text-slate-500 hover:bg-slate-100 transition">
+                        ยกเลิก
+                    </button>
+                    <button type="submit"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition">
+                        บันทึกการแก้ไข
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -773,10 +817,17 @@
                 div.className = 'flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-200';
                 div.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <span class="w-3.5 h-3.5 rounded-full" style="background-color: ${cat.color}"></span>
+                        <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
                         <span class="text-xs sm:text-sm font-medium text-slate-700">${cat.name}</span>
                     </div>
-                    <button onclick="deleteCategory('${cat.id}')" type="button" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash-can"></i></button>
+                    <div class="flex items-center gap-1">
+                        <button onclick="openEditCategoryModal('${cat.id}')" type="button" class="text-slate-400 hover:text-blue-600 p-1">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteCategory('${cat.id}')" type="button" class="text-slate-400 hover:text-rose-600 p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -799,6 +850,47 @@
             await fetchAllData();
             renderActiveTab();
             renderCategoryListModal();
+        }
+
+        function openEditCategoryModal(catId) {
+            const categories = getCurrentCategories();
+            const cat = categories.find(c => c.id === catId);
+            if (!cat) return;
+
+            document.getElementById('editCatId').value = cat.id;
+            document.getElementById('editCatName').value = cat.name;
+            document.getElementById('editCatColor').value = cat.color;
+
+            document.getElementById('editCategoryModal').classList.remove('hidden');
+        }
+
+        function closeEditCategoryModal() {
+            document.getElementById('editCategoryModal').classList.add('hidden');
+        }
+
+        async function handleEditCategory(e) {
+            e.preventDefault();
+            const id = document.getElementById('editCatId').value;
+            const name = document.getElementById('editCatName').value.trim();
+            const color = document.getElementById('editCatColor').value;
+
+            const endpoint = currentTab === 'savings' ? `/api/categories/${id}` : `/api/expense-categories/${id}`;
+
+            try {
+                await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, name, color })
+                });
+
+                closeEditCategoryModal();
+                await fetchAllData();
+                renderActiveTab();
+                renderCategoryListModal();
+            } catch (err) {
+                console.error("Error updating category:", err);
+                alert("ไม่สามารถบันทึกการแก้ไขได้");
+            }
         }
 
         async function deleteCategory(catId) {
