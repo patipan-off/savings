@@ -87,13 +87,13 @@
           <button id="tabExpenseBtn" onclick="switchTab('expenses')"
             class="flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
             <i class="fa-solid fa-receipt text-xs sm:text-sm"></i>
-            <span>Variable Expenses</span>
+            <span>Variable</span>
           </button>
           <!-- 2. Subscriptions renamed to Fixed Expenses -->
           <button id="tabFixedExpensesBtn" onclick="switchTab('fixed_expenses')"
             class="flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
             <i class="fa-solid fa-repeat text-xs sm:text-sm"></i>
-            <span>Fixed Expenses</span>
+            <span>Fixed</span>
           </button>
         </div>
       </div>
@@ -222,7 +222,7 @@
                   <input type="text" inputmode="decimal" id="itemPrice" placeholder="0" oninput="handleInputMask(this)"
                     onkeydown="preventArrowKeys(event)" onwheel="preventScrollChange(event)"
                     class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
-                  <select id="itemCurrency" onchange="calculateFormTotal()"
+                  <select id="itemCurrency" onchange="checkUsdUsage()"
                     class="px-2 py-2 border border-slate-300 rounded-xl outline-none text-xs bg-slate-50 font-semibold text-slate-700">
                     <option value="THB">THB (฿)</option>
                     <option value="USD">USD ($)</option>
@@ -237,6 +237,19 @@
                     class="w-9 h-9 border-0 rounded-xl cursor-pointer flex-shrink-0">
                   <span class="text-xs text-slate-500">Choose a color tag</span>
                 </div>
+              </div>
+            </div>
+
+            <!-- USD Rate Input (แสดงเมื่อเลือกใส่ค่า USD) -->
+            <div id="usdRateGroup" class="hidden p-3 bg-amber-50/60 rounded-xl border border-amber-200/80">
+              <label class="block text-xs font-semibold text-amber-800 mb-1">Exchange Rate <span
+                  class="text-rose-500">*</span></label>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-600 whitespace-nowrap">1 USD =</span>
+                <input type="text" inputmode="decimal" id="usdToThbRate" value="35.5" oninput="handleUsdRateInput(this)"
+                  onkeydown="preventArrowKeys(event)" onwheel="preventScrollChange(event)"
+                  class="w-full px-3 py-1.5 border border-amber-300 rounded-lg outline-none text-xs bg-white focus:ring-2 focus:ring-amber-500 text-right font-medium">
+                <span class="text-xs font-semibold text-slate-600">THB</span>
               </div>
             </div>
 
@@ -400,8 +413,6 @@
   </div>
 
   <script>
-    const USD_TO_THB_RATE = 35.5;
-
     let currentTab = 'savings';
     let currentPeriodType = 'monthly'; // Used for Income & Variable Expenses
     let currentSubCycle = 'monthly';    // Used for Fixed Expenses (Subscriptions)
@@ -422,6 +433,37 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function getUsdRate() {
+      const input = document.getElementById('usdToThbRate');
+      const rate = parseInputValue(input ? input.value : '35.5');
+      return rate > 0 ? rate : 35.5;
+    }
+
+    function checkUsdUsage() {
+      let isUsdUsed = false;
+      if (currentTab === 'fixed_expenses') {
+        const itemCurr = document.getElementById('itemCurrency');
+        if (itemCurr && itemCurr.value === 'USD') isUsdUsed = true;
+      } else {
+        document.querySelectorAll('.category-currency-select').forEach(select => {
+          if (select.value === 'USD') isUsdUsed = true;
+        });
+      }
+
+      const usdRateGroup = document.getElementById('usdRateGroup');
+      if (isUsdUsed) {
+        usdRateGroup.classList.remove('hidden');
+      } else {
+        usdRateGroup.classList.add('hidden');
+      }
+      calculateFormTotal();
+    }
+
+    function handleUsdRateInput(input) {
+      input.value = maskNumberInput(input.value);
+      calculateFormTotal();
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -553,6 +595,7 @@
         document.getElementById('activeModuleSub').innerText = 'Track all your recurring fixed expenses and subscription services';
         document.getElementById('metric3Label').innerText = 'Total Cost / Month';
         document.getElementById('metric4Label').innerText = 'Total Cost / Year';
+        document.getElementById('metric4Sub').className = 'text-base sm:text-lg font-semibold mt-1 truncate text-indigo-600';
         document.getElementById('metric1IconWrapper').className = "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2";
         document.getElementById('metric1Icon').className = "fa-solid fa-calculator";
         document.getElementById('metric2IconWrapper').className = "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2";
@@ -632,6 +675,7 @@
         renderCategoryInputs();
       }
 
+      checkUsdUsage();
       updateMetrics();
       updateChart();
       renderActiveTabTable();
@@ -749,7 +793,7 @@
         });
         document.getElementById('submitBtnText').innerText = 'Save New Record';
       }
-      calculateFormTotal();
+      checkUsdUsage();
     }
 
     function renderCategoryInputs() {
@@ -776,7 +820,7 @@
                      oninput="handleInputMask(this)" onfocus="this.select()"
                      onkeydown="preventArrowKeys(event)" onwheel="preventScrollChange(event)"
                      class="category-amount-input w-24 sm:w-28 text-right px-2 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none focus:ring-2">
-              <select data-cat-id="${cat.id}" onchange="calculateFormTotal()"
+              <select data-cat-id="${cat.id}" onchange="checkUsdUsage()"
                 class="category-currency-select px-1.5 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs outline-none bg-white text-slate-600 font-medium focus:ring-2">
                 <option value="THB">฿ THB</option>
                 <option value="USD">$ USD</option>
@@ -794,11 +838,12 @@
 
     function calculateFormTotal() {
       let total = 0;
+      const rate = getUsdRate();
       document.querySelectorAll('.category-amount-input').forEach(input => {
         const catId = input.dataset.catId;
         const select = document.querySelector(`.category-currency-select[data-cat-id="${catId}"]`);
         let val = parseInputValue(input.value);
-        if (select && select.value === 'USD') val = val * USD_TO_THB_RATE;
+        if (select && select.value === 'USD') val = val * rate;
         total += val;
       });
       document.getElementById('monthlyFormTotal').innerText = formatCurrency(total);
@@ -806,12 +851,13 @@
 
     async function handleFormSubmit(e) {
       e.preventDefault();
+      const usdRate = getUsdRate();
 
       if (currentTab === 'fixed_expenses') {
         const id = document.getElementById('editingSubId').value;
         const name = document.getElementById('itemName').value.trim();
         let amountVal = parseInputValue(document.getElementById('itemPrice').value);
-        if (document.getElementById('itemCurrency').value === 'USD') amountVal *= USD_TO_THB_RATE;
+        if (document.getElementById('itemCurrency').value === 'USD') amountVal *= usdRate;
         const cycle = currentSubCycle;
         const color = document.getElementById('itemColor').value;
         const note = document.getElementById('entryNote').value.trim() || null;
@@ -839,7 +885,7 @@
           const catId = input.dataset.catId;
           const select = document.querySelector(`.category-currency-select[data-cat-id="${catId}"]`);
           let val = parseInputValue(input.value);
-          if (select && select.value === 'USD') val *= USD_TO_THB_RATE;
+          if (select && select.value === 'USD') val *= usdRate;
           amounts[catId] = val;
           total += val;
         });
@@ -891,6 +937,7 @@
         if (currentTab === 'income') document.getElementById('formTitle').innerText = 'Record Income';
         if (currentTab === 'expenses') document.getElementById('formTitle').innerText = 'Record Variable Expense';
       }
+      checkUsdUsage();
     }
 
     function editRecord(periodKey) {
@@ -941,6 +988,7 @@
       document.getElementById('formTitle').innerText = `Edit ${item.name}`;
       document.getElementById('submitBtnText').innerText = 'Save Changes';
       document.getElementById('cancelEditBtn').classList.remove('hidden');
+      checkUsdUsage();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -980,22 +1028,50 @@
         return;
       }
 
-      const latestPeriod = sortedPeriods[sortedPeriods.length - 1];
-      const latestRecord = dataMap[latestPeriod];
-      let topCatId = null, maxAmt = -1;
+      // แยกกุญแจสำหรับรายเดือนและรายปี
+      const monthlyKeys = sortedPeriods.filter(p => p.length === 7);
 
-      if (latestRecord.amounts) {
+      let latestMonthlyPeriod = monthlyKeys.length > 0 ? monthlyKeys[monthlyKeys.length - 1] : null;
+
+      // ถ้าไม่มีข้อมูลรายเดือนเลย ให้ดึงงวดล่าสุดจากข้อมูลทั้งหมดที่มี
+      if (!latestMonthlyPeriod) {
+        latestMonthlyPeriod = sortedPeriods[sortedPeriods.length - 1];
+      }
+
+      const latestRecord = dataMap[latestMonthlyPeriod];
+
+      const combinedCategoryAmounts = {};
+
+      if (latestRecord && latestRecord.amounts) {
         Object.keys(latestRecord.amounts).forEach(cId => {
-          const amt = latestRecord.amounts[cId] || 0;
-          if (amt > maxAmt) { maxAmt = amt; topCatId = cId; }
+          combinedCategoryAmounts[cId] = (combinedCategoryAmounts[cId] || 0) + (latestRecord.amounts[cId] || 0);
         });
       }
+
+      let latestCombinedTotal = latestRecord ? latestRecord.total : 0;
+      if (latestMonthlyPeriod.length === 7) {
+        const yearKey = latestMonthlyPeriod.slice(0, 4);
+        if (dataMap[yearKey] && dataMap[yearKey].period_type === 'yearly') {
+          latestCombinedTotal += (dataMap[yearKey].total / 12);
+          if (dataMap[yearKey].amounts) {
+            Object.keys(dataMap[yearKey].amounts).forEach(cId => {
+              combinedCategoryAmounts[cId] = (combinedCategoryAmounts[cId] || 0) + ((dataMap[yearKey].amounts[cId] || 0) / 12);
+            });
+          }
+        }
+      }
+
+      let topCatId = null, maxAmt = -1;
+      Object.keys(combinedCategoryAmounts).forEach(cId => {
+        const amt = combinedCategoryAmounts[cId] || 0;
+        if (amt > maxAmt) { maxAmt = amt; topCatId = cId; }
+      });
 
       const topCatObj = categories.find(c => c.id === topCatId);
       document.getElementById('metric3Value').innerText = topCatObj && maxAmt > 0 ? topCatObj.name : '-';
       document.getElementById('metric3Sub').innerText = topCatObj && maxAmt > 0 ? formatCurrency(maxAmt) : '฿0';
-      document.getElementById('metric4Value').innerText = formatPeriod(latestPeriod);
-      document.getElementById('metric4Sub').innerText = formatCurrency(latestRecord.total);
+      document.getElementById('metric4Value').innerText = formatPeriod(latestMonthlyPeriod);
+      document.getElementById('metric4Sub').innerText = formatCurrency(latestCombinedTotal);
     }
 
     function renderActiveTabTable() {
