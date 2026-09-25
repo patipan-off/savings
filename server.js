@@ -31,7 +31,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Auto-initialize Tables if missing
+// Auto-initialize Tables if missing & Migration support
 async function initTables() {
     try {
         await pool.query(`
@@ -64,7 +64,40 @@ async function initTables() {
         `);
         await pool.query(`
             CREATE TABLE IF NOT EXISTS expense_logs (
-                month VARCHAR(7) PRIMARY KEY,
+                period VARCHAR(10) PRIMARY KEY,
+                period_type ENUM('monthly', 'yearly') DEFAULT 'monthly',
+                entry_date DATE DEFAULT NULL,
+                amounts_json JSON NOT NULL,
+                total DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+                note TEXT DEFAULT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Migration check for older expense_logs schema if column 'month' exists
+        try {
+            const [cols] = await pool.query(`SHOW COLUMNS FROM expense_logs LIKE 'month'`);
+            if (cols.length > 0) {
+                await pool.query(`ALTER TABLE expense_logs CHANGE COLUMN month period VARCHAR(10) NOT NULL`);
+                await pool.query(`ALTER TABLE expense_logs ADD COLUMN period_type ENUM('monthly', 'yearly') DEFAULT 'monthly' AFTER period`);
+            }
+        } catch (mErr) {
+            console.log("Migration check for expense_logs:", mErr.message);
+        }
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS income_categories (
+                id VARCHAR(50) PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                color VARCHAR(20) DEFAULT '#06b6d4',
+                sort_order INT DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS income_logs (
+                period VARCHAR(10) PRIMARY KEY,
+                period_type ENUM('monthly', 'yearly') DEFAULT 'monthly',
                 entry_date DATE DEFAULT NULL,
                 amounts_json JSON NOT NULL,
                 total DECIMAL(12,2) NOT NULL DEFAULT 0.00,
@@ -84,12 +117,6 @@ async function initTables() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-
-        // Migration Check: add column color
-        const [cols] = await pool.query(`SHOW COLUMNS FROM subscriptions LIKE 'color'`);
-        if (cols.length === 0) {
-            await pool.query(`ALTER TABLE subscriptions ADD COLUMN color VARCHAR(20) DEFAULT '#6366f1' AFTER cycle`);
-        }
 
         console.log("✅ Database tables checked/created successfully.");
     } catch (err) {
@@ -176,7 +203,7 @@ app.delete('/api/logs/:month', async (req, res) => {
 });
 
 /* =========================================================
-   2. EXPENSES API ROUTES
+   2. VARIABLE EXPENSES API ROUTES (UPDATED: Support Yearly/Monthly)
    ========================================================= */
 app.get('/api/expense-categories', async (req, res) => {
     try {
@@ -220,7 +247,7 @@ app.delete('/api/expense-categories/:id', async (req, res) => {
 
 app.get('/api/expense-logs', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT month, entry_date, amounts_json AS amounts, total, note, updated_at FROM expense_logs ORDER BY month ASC');
+        const [rows] = await pool.query('SELECT period, period_type, entry_date, amounts_json AS amounts, total, note, updated_at FROM expense_logs ORDER BY period ASC');
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -228,24 +255,24 @@ app.get('/api/expense-logs', async (req, res) => {
 });
 
 app.post('/api/expense-logs', async (req, res) => {
-    const { month, entry_date, amounts, total, note } = req.body;
+    const { period, period_type, entry_date, amounts, total, note } = req.body;
     try {
         const query = `
-            INSERT INTO expense_logs (month, entry_date, amounts_json, total, note) 
-            VALUES (?, ?, ?, ?, ?) 
-            ON DUPLICATE KEY UPDATE entry_date = VALUES(entry_date), amounts_json = VALUES(amounts_json), total = VALUES(total), note = VALUES(note)
+            INSERT INTO expense_logs (period, period_type, entry_date, amounts_json, total, note) 
+            VALUES (?, ?, ?, ?, ?, ?) 
+            ON DUPLICATE KEY UPDATE period_type = VALUES(period_type), entry_date = VALUES(entry_date), amounts_json = VALUES(amounts_json), total = VALUES(total), note = VALUES(note)
         `;
-        await pool.query(query, [month, entry_date || null, JSON.stringify(amounts), total, note || null]);
+        await pool.query(query, [period, period_type || 'monthly', entry_date || null, JSON.stringify(amounts), total, note || null]);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-app.delete('/api/expense-logs/:month', async (req, res) => {
-    const { month } = req.params;
+app.delete('/api/expense-logs/:period', async (req, res) => {
+    const { period } = req.params;
     try {
-        await pool.query('DELETE FROM expense_logs WHERE month = ?', [month]);
+        await pool.query('DELETE FROM expense_logs WHERE period = ?', [period]);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -253,7 +280,84 @@ app.delete('/api/expense-logs/:month', async (req, res) => {
 });
 
 /* =========================================================
-   3. SUBSCRIPTIONS API ROUTES
+   3. INCOME API ROUTES
+   ========================================================= */
+app.get('/api/income-categories', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT id, name, color FROM income_categories ORDER BY sort_order ASC, created_at ASC');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/income-categories', async (req, res) => {
+    const { id, name, color } = req.body;
+    try {
+        await pool.query('INSERT INTO income_categories (id, name, color) VALUES (?, ?, ?)', [id, name, color]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/api/income-categories/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, color } = req.body;
+    try {
+        await pool.query('UPDATE income_categories SET name = ?, color = ? WHERE id = ?', [name, color, id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/income-categories/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('DELETE FROM income_categories WHERE id = ?', [id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/income-logs', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT period, period_type, entry_date, amounts_json AS amounts, total, note, updated_at FROM income_logs ORDER BY period ASC');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/income-logs', async (req, res) => {
+    const { period, period_type, entry_date, amounts, total, note } = req.body;
+    try {
+        const query = `
+            INSERT INTO income_logs (period, period_type, entry_date, amounts_json, total, note) 
+            VALUES (?, ?, ?, ?, ?, ?) 
+            ON DUPLICATE KEY UPDATE period_type = VALUES(period_type), entry_date = VALUES(entry_date), amounts_json = VALUES(amounts_json), total = VALUES(total), note = VALUES(note)
+        `;
+        await pool.query(query, [period, period_type || 'monthly', entry_date || null, JSON.stringify(amounts), total, note || null]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/income-logs/:period', async (req, res) => {
+    const { period } = req.params;
+    try {
+        await pool.query('DELETE FROM income_logs WHERE period = ?', [period]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/* =========================================================
+   4. FIXED EXPENSES (SUBSCRIPTIONS) API ROUTES
    ========================================================= */
 app.get('/api/subscriptions', async (req, res) => {
     try {
