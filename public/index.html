@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -38,16 +38,24 @@
       background: #cbd5e1;
       border-radius: 4px;
     }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- Header Navigation -->
   <header
     class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-30 pt-safe">
     <div
-      class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2">
+      class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
 
       <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
         <div
@@ -57,60 +65,68 @@
         <div class="min-w-0">
           <h1 class="text-base sm:text-xl font-semibold leading-tight truncate">Financial Tracker</h1>
           <p class="text-[10px] sm:text-xs text-slate-300 truncate hidden xs:block">
-            ระบบติดตามเงินเก็บ ค่าใช้จ่าย และบริการ Subscription</p>
+            Track savings, income, variable & fixed expenses</p>
         </div>
       </div>
 
-      <!-- Tab Navigation Bar -->
-      <div class="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700 text-xs sm:text-sm">
-        <button id="tabSavingsBtn" onclick="switchTab('savings')"
-          class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm">
-          <i class="fa-solid fa-piggy-bank text-xs sm:text-sm"></i>
-          <span>เงินเก็บ</span>
-        </button>
-        <button id="tabExpenseBtn" onclick="switchTab('expenses')"
-          class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white">
-          <i class="fa-solid fa-receipt text-xs sm:text-sm"></i>
-          <span>ค่าใช้จ่าย</span>
-        </button>
-        <button id="tabSubscriptionBtn" onclick="switchTab('subscription')"
-          class="px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white">
-          <i class="fa-solid fa-repeat text-xs sm:text-sm"></i>
-          <span>Subscription</span>
-        </button>
+      <!-- 1. Tabs ordered: Savings, Income, Variable Expenses, Fixed Expenses -->
+      <div
+        class="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/80 text-xs sm:text-sm overflow-x-auto no-scrollbar max-w-full">
+        <div class="flex items-center gap-1 min-w-max w-full">
+          <button id="tabSavingsBtn" onclick="switchTab('savings')"
+            class="flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm whitespace-nowrap">
+            <i class="fa-solid fa-piggy-bank text-xs sm:text-sm"></i>
+            <span>Savings</span>
+          </button>
+          <button id="tabIncomeBtn" onclick="switchTab('income')"
+            class="flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
+            <i class="fa-solid fa-hand-holding-dollar text-xs sm:text-sm"></i>
+            <span>Income</span>
+          </button>
+          <!-- 2. Expenses renamed to Variable Expenses -->
+          <button id="tabExpenseBtn" onclick="switchTab('expenses')"
+            class="flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
+            <i class="fa-solid fa-receipt text-xs sm:text-sm"></i>
+            <span>Variable Expenses</span>
+          </button>
+          <!-- 2. Subscriptions renamed to Fixed Expenses -->
+          <button id="tabFixedExpensesBtn" onclick="switchTab('fixed_expenses')"
+            class="flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
+            <i class="fa-solid fa-repeat text-xs sm:text-sm"></i>
+            <span>Fixed Expenses</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow w-full space-y-4 sm:space-y-6">
 
-    <!-- Top Actions Banner -->
     <div
       class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm">
       <div class="min-w-0">
         <h2 id="activeModuleTitle" class="text-base sm:text-lg font-semibold text-slate-800 truncate">
-          ระบบบันทึกเงินเก็บประจำเดือน</h2>
+          Monthly Savings Tracker</h2>
         <p id="activeModuleSub" class="text-xs text-slate-500 truncate">
-          จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน</p>
+          Manage your savings and asset growth</p>
       </div>
       <button id="manageCategoryBtn" onclick="openCategoryModal()"
         class="self-start sm:self-auto bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 border border-slate-200 flex-shrink-0">
         <i class="fa-solid fa-tags text-slate-500"></i>
-        <span>จัดการประเภท</span>
+        <span>Manage Categories</span>
       </button>
     </div>
 
-    <!-- Metrics Dashboard -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
       <div
         class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
         <div class="min-w-0">
           <p id="metric3Label" class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            ประเภทสูงสุด (เดือนล่าสุด)</p>
+            Top Category (Latest Month)</p>
           <h3 id="metric3Value" class="text-base sm:text-lg font-semibold text-slate-800 mt-1 truncate">-</h3>
           <p id="metric3Sub" class="text-xs text-slate-500 mt-0.5 sm:mt-1">฿0</p>
         </div>
-        <div
+        <div id="metric1IconWrapper"
           class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
           <i id="metric1Icon" class="fa-solid fa-trophy"></i>
         </div>
@@ -120,148 +136,151 @@
         class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
         <div class="min-w-0">
           <p id="metric4Label" class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            เดือนล่าสุด
+            Latest Total
           </p>
           <h3 id="metric4Sub" class="">฿0</h3>
           <p id="metric4Value" class="text-xs text-slate-800 mt-0.5 sm:mt-1">-</p>
         </div>
-        <div
+        <div id="metric2IconWrapper"
           class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2">
           <i id="metric2Icon" class="fa-regular fa-calendar-check"></i>
         </div>
       </div>
     </div>
 
-    <!-- Form & Chart Grid -->
     <div id="contentGrid" class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
-      <!-- Entry Form -->
       <div id="formCard"
         class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 min-w-0">
-              <i id="formHeaderIcon" class="fa-solid fa-circle-plus text-emerald-600 flex-shrink-0"></i>
-              <span id="formTitle" class="truncate">บันทึกเงินเก็บประจำเดือน</span>
+              <i id="formHeaderIcon" class="fa-solid fa-circle-plus flex-shrink-0"></i>
+              <span id="formTitle" class="truncate">Add Record</span>
             </h2>
             <button id="cancelEditBtn" onclick="resetForm()" type="button"
               class="hidden text-xs text-rose-500 hover:text-rose-700 font-medium flex-shrink-0">
-              <i class="fa-solid fa-xmark mr-1"></i>ยกเลิก
+              <i class="fa-solid fa-xmark mr-1"></i>Cancel
             </button>
           </div>
 
           <form id="mainForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
             <input type="hidden" id="editingSubId">
 
-            <!-- Month Selection Row -->
             <div id="monthPickerGroup">
-              <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกเดือน / ปี <span
-                  class="text-rose-500">*</span></label>
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-xs font-semibold text-slate-600">Select Period <span
+                    class="text-rose-500">*</span></label>
+                <!-- 3 & 4. Toggle buttons for Monthly/Yearly -->
+                <div id="periodTypeToggle"
+                  class="hidden flex text-[10px] bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                  <button type="button" onclick="setPeriodType('monthly')" id="btnPeriodMonthly"
+                    class="px-2 py-1 rounded-md bg-white shadow-sm font-medium text-slate-800 transition">Monthly</button>
+                  <button type="button" onclick="setPeriodType('yearly')" id="btnPeriodYearly"
+                    class="px-2 py-1 rounded-md text-slate-500 hover:text-slate-700 transition">Yearly</button>
+                </div>
+              </div>
               <div class="flex flex-col">
-                <input type="month" id="entryMonth" onchange="handleMonthChange(this.value)"
-                  class="px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs flex-1">
+                <input type="month" id="entryMonth" onchange="handlePeriodChange(this.value)"
+                  class="px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 outline-none text-xs flex-1">
+                <input type="number" id="entryYear" onchange="handlePeriodChange(this.value)" placeholder="e.g. 2026"
+                  class="hidden px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 outline-none text-xs flex-1">
               </div>
             </div>
 
-            <!-- Savings / Expenses Category Inputs -->
             <div id="categoryInputsWrapper" class="pt-2 border-t border-slate-100">
               <div class="flex justify-between items-center mb-2 gap-1">
-                <label class="text-xs font-semibold text-slate-600 truncate">ระบุจำนวนเงินสุทธิแยกตามประเภท</label>
+                <label class="text-xs font-semibold text-slate-600 truncate">Amounts by Category</label>
                 <button type="button" onclick="openCategoryModal()"
-                  class="text-xs text-emerald-600 hover:underline flex-shrink-0">+ จัดการประเภท</button>
+                  class="text-xs text-slate-500 hover:underline flex-shrink-0">+ Manage Categories</button>
               </div>
               <div id="categoryInputsContainer" class="space-y-3 pr-1"></div>
             </div>
 
-            <!-- Subscription Specific Inputs -->
-            <div id="subscriptionInputsWrapper" class="space-y-3 hidden">
+            <div id="itemInputsWrapper" class="space-y-3 hidden">
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อบริการ / แอปพลิเคชัน <span
+                <label id="itemNameLabel" class="block text-xs font-semibold text-slate-600 mb-1">Item Name <span
                     class="text-rose-500">*</span></label>
-                <input type="text" id="subName" placeholder="เช่น Netflix, Spotify, iCloud"
+                <input type="text" id="itemName" placeholder="..."
                   class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
               </div>
 
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">ราคา <span
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label id="itemPriceLabel" class="block text-xs font-semibold text-slate-600">Price <span
                       class="text-rose-500">*</span></label>
-                  <div class="flex items-center gap-1">
-                    <input type="text" inputmode="decimal" id="subPrice" placeholder="0" oninput="handleInputMask(this)"
-                      onkeydown="preventArrowKeys(event)" onwheel="preventScrollChange(event)"
-                      class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
-                    <select id="subCurrency" onchange="calculateFormTotal()"
-                      class="px-2 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs bg-slate-50 font-semibold text-slate-700">
-                      <option value="THB">THB (฿)</option>
-                      <option value="USD">USD ($)</option>
-                    </select>
+                  <!-- 4. Fixed Expenses UI Toggle Monthly/Yearly -->
+                  <div id="subCycleToggle"
+                    class="flex text-[10px] bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                    <button type="button" onclick="setSubCycle('monthly')" id="btnSubMonthly"
+                      class="px-2 py-1 rounded-md bg-white shadow-sm font-medium text-indigo-700 transition">Monthly</button>
+                    <button type="button" onclick="setSubCycle('yearly')" id="btnSubYearly"
+                      class="px-2 py-1 rounded-md text-slate-500 hover:text-slate-700 transition">Yearly</button>
                   </div>
                 </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">รอบการชำระเงิน</label>
-                  <select id="subCycle"
-                    class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs bg-white">
-                    <option value="monthly">รายเดือน (Monthly)</option>
-                    <option value="yearly">รายปี (Yearly)</option>
+                <div class="flex items-center gap-2">
+                  <input type="text" inputmode="decimal" id="itemPrice" placeholder="0" oninput="handleInputMask(this)"
+                    onkeydown="preventArrowKeys(event)" onwheel="preventScrollChange(event)"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                  <select id="itemCurrency" onchange="calculateFormTotal()"
+                    class="px-2 py-2 border border-slate-300 rounded-xl outline-none text-xs bg-slate-50 font-semibold text-slate-700">
+                    <option value="THB">THB (฿)</option>
+                    <option value="USD">USD ($)</option>
                   </select>
                 </div>
               </div>
 
-              <!-- Color Selection for Subscription -->
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">สีประจำบริการ (แสดงใน Pie Chart)</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Item Color</label>
                 <div class="flex items-center gap-2">
-                  <input type="color" id="subColor" value="#6366f1"
+                  <input type="color" id="itemColor" value="#6366f1"
                     class="w-9 h-9 border-0 rounded-xl cursor-pointer flex-shrink-0">
-                  <span class="text-xs text-slate-500">เลือกสีจำแนกบริการ</span>
+                  <span class="text-xs text-slate-500">Choose a color tag</span>
                 </div>
               </div>
             </div>
 
-            <!-- Common Note Input -->
             <div id="noteGroup">
-              <label class="block text-xs font-semibold text-slate-600 mb-1">หมายเหตุ /
-                โน้ตย่อ <span class="text-slate-400 font-normal">(Optional)</span></label>
-              <textarea name="entryNote" type="text" id="entryNote" placeholder="ไม่มี"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs"></textarea>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Note <span
+                  class="text-slate-400 font-normal">(Optional)</span></label>
+              <textarea name="entryNote" type="text" id="entryNote" placeholder="None"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-xs"></textarea>
             </div>
 
-            <!-- Total Preview Row -->
             <div id="monthlyTotalContainer"
               class="pt-3 border-t border-slate-100 flex justify-between items-center bg-slate-50 p-3 rounded-xl">
-              <span class="text-xs font-semibold text-slate-600">รวมเดือนนี้ (บาท):</span>
-              <span id="monthlyFormTotal" class="text-base font-semibold text-emerald-600">฿0</span>
+              <span class="text-xs font-semibold text-slate-600">Period Total (THB):</span>
+              <span id="monthlyFormTotal" class="text-base font-semibold">฿0</span>
             </div>
 
             <button type="submit" id="submitBtn"
-              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm">
+              class="w-full font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm">
               <i class="fa-solid fa-floppy-disk"></i>
-              <span id="submitBtnText">อัปเดต / บันทึกข้อมูล</span>
+              <span id="submitBtnText">Save Record</span>
             </button>
           </form>
         </div>
       </div>
 
-      <!-- Chart Display Section -->
       <div id="chartCard"
         class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 mb-4">
           <div>
             <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
-              <i id="chartHeaderIcon" class="fa-solid fa-chart-column text-emerald-600"></i>
-              <span id="chartHeaderTitle">กราฟแนวโน้มรายเดือน</span>
+              <i id="chartHeaderIcon" class="fa-solid fa-chart-column"></i>
+              <span id="chartHeaderTitle">Trend Chart</span>
             </h2>
-            <p id="chartHeaderSub" class="text-xs text-slate-500">แสดงมูลค่ารวมและสัดส่วน ณ สิ้นเดือน</p>
+            <p id="chartHeaderSub" class="text-xs text-slate-500">Showing total values and proportions</p>
           </div>
           <select id="chartTypeSelect" onchange="updateChart()"
             class="bg-slate-100 border border-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none self-start sm:self-auto">
-            <option value="stacked">กราฟแท่ง (Stacked)</option>
-            <option value="line">กราฟเส้นแนวโน้ม (Trend Line)</option>
+            <option value="stacked">Stacked Bar Chart</option>
+            <option value="line">Trend Line Chart</option>
           </select>
         </div>
 
         <div class="relative w-full h-[260px] sm:h-auto sm:flex-1 flex flex-col">
-          <div class="my-auto h-full max-h-[500px]">
+          <div class="my-auto h-full max-h-[500px] w-full">
             <canvas id="mainChart"></canvas>
           </div>
         </div>
@@ -269,19 +288,19 @@
 
     </div>
 
-    <!-- History / Data Table Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
       <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
             <i id="tableHeaderIcon" class="fa-solid fa-table-list text-emerald-600"></i>
-            <span id="tableTitle">ประวัติการอัปเดตยอดสุทธิ</span>
+            <span id="tableTitle">History Records</span>
           </h2>
-          <p id="tableSubTitle" class="text-xs text-slate-500">ตารางแสดงรายการย้อนหลังและการเติบโตเทียบกับเดือนก่อนหน้า
+          <p id="tableSubTitle" class="text-xs text-slate-500">Table showing historical items and growth compared to
+            previous periods
           </p>
         </div>
-        <input type="text" id="searchInput" oninput="renderActiveTabTable()" placeholder="ค้นหารายการ..."
-          class="px-3 py-1.5 border border-slate-200 text-xs rounded-xl focus:ring-2 focus:ring-emerald-500 w-full sm:w-56 outline-none">
+        <input type="text" id="searchInput" oninput="renderActiveTabTable()" placeholder="Search records..."
+          class="px-3 py-1.5 border border-slate-200 text-xs rounded-xl focus:ring-2 w-full sm:w-56 outline-none">
       </div>
 
       <div class="overflow-x-auto custom-scrollbar">
@@ -297,20 +316,19 @@
       </div>
       <div id="emptyTableState" class="hidden p-8 text-center text-slate-400">
         <i class="fa-regular fa-folder-open text-3xl sm:text-4xl mb-2"></i>
-        <p class="text-xs sm:text-sm">ยังไม่มีข้อมูลในระบบ ให้เริ่มบันทึกจากฟอร์มด้านบนได้เลย</p>
+        <p class="text-xs sm:text-sm">No records found. Start by adding one using the form above.</p>
       </div>
     </div>
 
   </main>
 
-  <!-- Modal Category Management -->
   <div id="categoryModal"
     class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden">
       <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
         <h3 id="categoryModalTitle" class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-          <i class="fa-solid fa-tags text-emerald-600"></i>
-          จัดการประเภท
+          <i class="fa-solid fa-tags text-slate-600"></i>
+          Manage Categories
         </h3>
         <button onclick="closeCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600 p-1"><i
             class="fa-solid fa-xmark text-lg"></i></button>
@@ -318,21 +336,21 @@
 
       <div class="p-4 sm:p-5 space-y-4">
         <form onsubmit="handleAddCategory(event)" class="space-y-3 pb-4 border-b border-slate-100">
-          <label class="block text-xs font-semibold text-slate-600">เพิ่มประเภทใหม่</label>
+          <label class="block text-xs font-semibold text-slate-600">Add New Category</label>
           <div class="flex items-center gap-2">
-            <input type="text" id="newCatName" placeholder="ชื่อประเภท..." required
-              class="flex-grow px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="newCatName" placeholder="Category name..." required
+              class="flex-grow px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm outline-none">
             <input type="color" id="newCatColor" value="#10b981"
               class="w-9 h-9 border-0 rounded-xl cursor-pointer flex-shrink-0">
             <button type="submit"
-              class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1 flex-shrink-0">
-              <i class="fa-solid fa-plus"></i> เพิ่ม
+              class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-1 flex-shrink-0">
+              <i class="fa-solid fa-plus"></i> Add
             </button>
           </div>
         </form>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-2">รายการประเภทปัจจุบัน</label>
+          <label class="block text-xs font-semibold text-slate-600 mb-2">Current Categories</label>
           <div id="categoryListContainer" class="space-y-2 max-h-52 sm:max-h-60 overflow-y-auto custom-scrollbar pr-1">
           </div>
         </div>
@@ -340,14 +358,13 @@
     </div>
   </div>
 
-  <!-- Modal Edit Category -->
   <div id="editCategoryModal"
     class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full shadow-xl overflow-hidden">
       <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
         <h3 class="font-semibold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-          <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
-          แก้ไขประเภท
+          <i class="fa-solid fa-pen-to-square text-slate-600"></i>
+          Edit Category
         </h3>
         <button onclick="closeEditCategoryModal()" type="button" class="text-slate-400 hover:text-slate-600 p-1">
           <i class="fa-solid fa-xmark text-lg"></i>
@@ -357,67 +374,71 @@
       <form onsubmit="handleEditCategory(event)" class="p-4 sm:p-5 space-y-4">
         <input type="hidden" id="editCatId">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อประเภท</label>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Category Name</label>
           <input type="text" id="editCatName" required
-            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm outline-none">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">สีประจำประเภท</label>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Category Color</label>
           <div class="flex items-center gap-3">
             <input type="color" id="editCatColor" class="w-10 h-10 border-0 rounded-xl cursor-pointer flex-shrink-0">
-            <span class="text-xs text-slate-500">เลือกสีสำหรับแสดงบนกราฟและรายการ</span>
+            <span class="text-xs text-slate-500">Choose a color for charts and items</span>
           </div>
         </div>
         <div class="flex items-center justify-end gap-2 pt-2">
           <button type="button" onclick="closeEditCategoryModal()"
             class="px-3 py-2 rounded-xl text-xs font-medium text-slate-500 hover:bg-slate-100 transition">
-            ยกเลิก
+            Cancel
           </button>
           <button type="submit"
-            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition">
-            บันทึกการแก้ไข
+            class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-medium transition">
+            Save Changes
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Script Logic -->
   <script>
-    // CONSTANT: กำหนดอัตราแลกเปลี่ยน 1 USD = ? บาท
     const USD_TO_THB_RATE = 35.5;
 
-    let currentTab = 'savings'; // 'savings' | 'expenses' | 'subscription'
+    let currentTab = 'savings';
+    let currentPeriodType = 'monthly'; // Used for Income & Variable Expenses
+    let currentSubCycle = 'monthly';    // Used for Fixed Expenses (Subscriptions)
 
-    let savingsCategories = [];
-    let savingsLogs = [];
-    let savingsDataMap = {};
-
-    let expenseCategories = [];
-    let expenseLogs = [];
-    let expenseDataMap = {};
-
+    let savingsCategories = [], savingsLogs = [], savingsDataMap = {};
+    let expenseCategories = [], expenseLogs = [], expenseDataMap = {};
+    let incomeCategories = [], incomeLogs = [], incomeDataMap = {};
     let subscriptionsList = [];
 
     let chartInstance = null;
-    const monthNamesThai = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+    const monthNamesEn = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
     window.addEventListener('DOMContentLoaded', async () => {
       const currentMonth = new Date().toISOString().slice(0, 7);
       document.getElementById('entryMonth').value = currentMonth;
+      document.getElementById('entryYear').value = new Date().getFullYear();
       await fetchAllData();
       initChart();
       renderActiveTab();
-      handleMonthChange(currentMonth);
     });
 
     async function fetchAllData() {
       try {
-        const [scRes, slRes, ecRes, elRes, subRes] = await Promise.all([
-          fetch('/api/categories'),
-          fetch('/api/logs'),
-          fetch('/api/expense-categories'),
-          fetch('/api/expense-logs'),
+        const [scRes, slRes, ecRes, elRes, incCatRes, incLogRes, subRes] = await Promise.all([
+          fetch('/api/categories'), fetch('/api/logs'),
+          fetch('/api/expense-categories'), fetch('/api/expense-logs'),
+          fetch('/api/income-categories'), fetch('/api/income-logs'),
           fetch('/api/subscriptions')
         ]);
 
@@ -425,124 +446,190 @@
         savingsLogs = await slRes.json();
         expenseCategories = await ecRes.json();
         expenseLogs = await elRes.json();
+        incomeCategories = await incCatRes.json();
+        incomeLogs = await incLogRes.json();
         subscriptionsList = await subRes.json();
 
-        savingsDataMap = {};
-        if (Array.isArray(savingsLogs)) {
-          savingsLogs.forEach(l => {
-            const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
-            savingsDataMap[l.month] = { ...l, amounts: amounts || {}, total: Number(l.total) };
-          });
-        }
-
-        expenseDataMap = {};
-        if (Array.isArray(expenseLogs)) {
-          expenseLogs.forEach(l => {
-            const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
-            expenseDataMap[l.month] = { ...l, amounts: amounts || {}, total: Number(l.total) };
-          });
-        }
+        savingsDataMap = mapLogs(savingsLogs, 'month');
+        expenseDataMap = mapLogs(expenseLogs, 'period');
+        incomeDataMap = mapLogs(incomeLogs, 'period');
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     }
 
+    function mapLogs(logsArray, keyName) {
+      const map = {};
+      if (Array.isArray(logsArray)) {
+        logsArray.forEach(l => {
+          const key = l[keyName] || l.period || l.month;
+          const amounts = typeof l.amounts === 'string' ? JSON.parse(l.amounts) : l.amounts;
+          map[key] = { ...l, amounts: amounts || {}, total: Number(l.total) };
+        });
+      }
+      return map;
+    }
+
     function switchTab(tab) {
       currentTab = tab;
       const savingsBtn = document.getElementById('tabSavingsBtn');
+      const incomeBtn = document.getElementById('tabIncomeBtn');
       const expenseBtn = document.getElementById('tabExpenseBtn');
-      const subBtn = document.getElementById('tabSubscriptionBtn');
+      const fixedBtn = document.getElementById('tabFixedExpensesBtn');
 
-      savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
-      expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
-      subBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+      const inactiveStyle = "flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap";
 
-      if (tab === 'savings') {
-        savingsBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm";
-      } else if (tab === 'expenses') {
-        expenseBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
-      } else if (tab === 'subscription') {
-        subBtn.className = "px-2.5 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm";
-      }
+      savingsBtn.className = inactiveStyle;
+      incomeBtn.className = inactiveStyle;
+      expenseBtn.className = inactiveStyle;
+      fixedBtn.className = inactiveStyle;
+
+      if (tab === 'savings') savingsBtn.className = "flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm whitespace-nowrap";
+      else if (tab === 'income') incomeBtn.className = "flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 bg-cyan-600 text-white shadow-sm whitespace-nowrap";
+      else if (tab === 'expenses') expenseBtn.className = "flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 bg-rose-600 text-white shadow-sm whitespace-nowrap";
+      else if (tab === 'fixed_expenses') fixedBtn.className = "flex-1 sm:flex-initial px-2.5 sm:px-3.5 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 bg-indigo-600 text-white shadow-sm whitespace-nowrap";
 
       resetForm();
       renderActiveTab();
     }
 
-    function renderActiveTab() {
-      const isSavings = currentTab === 'savings';
-      const isExpense = currentTab === 'expenses';
-      const isSub = currentTab === 'subscription';
+    // Toggle Period Type (Monthly / Yearly) for Income and Variable Expenses
+    function setPeriodType(type) {
+      currentPeriodType = type;
+      const btnM = document.getElementById('btnPeriodMonthly');
+      const btnY = document.getElementById('btnPeriodYearly');
+      const inputM = document.getElementById('entryMonth');
+      const inputY = document.getElementById('entryYear');
 
-      // Layout toggle
+      const themeColorClass = currentTab === 'income' ? 'text-cyan-700' : 'text-rose-700';
+
+      if (type === 'monthly') {
+        btnM.className = `px-2 py-1 rounded-md bg-white shadow-sm font-medium ${themeColorClass} transition`;
+        btnY.className = 'px-2 py-1 rounded-md text-slate-500 hover:text-slate-700 transition';
+        inputM.classList.remove('hidden');
+        inputY.classList.add('hidden');
+        handlePeriodChange(inputM.value);
+      } else {
+        btnY.className = `px-2 py-1 rounded-md bg-white shadow-sm font-medium ${themeColorClass} transition`;
+        btnM.className = 'px-2 py-1 rounded-md text-slate-500 hover:text-slate-700 transition';
+        inputY.classList.remove('hidden');
+        inputM.classList.add('hidden');
+        if (!inputY.value) inputY.value = new Date().getFullYear();
+        handlePeriodChange(inputY.value);
+      }
+    }
+
+    // Toggle Billing Cycle for Fixed Expenses (Subscriptions)
+    function setSubCycle(cycle) {
+      currentSubCycle = cycle;
+      const btnM = document.getElementById('btnSubMonthly');
+      const btnY = document.getElementById('btnSubYearly');
+
+      if (cycle === 'monthly') {
+        btnM.className = 'px-2 py-1 rounded-md bg-white shadow-sm font-medium text-indigo-700 transition';
+        btnY.className = 'px-2 py-1 rounded-md text-slate-500 hover:text-slate-700 transition';
+      } else {
+        btnY.className = 'px-2 py-1 rounded-md bg-white shadow-sm font-medium text-indigo-700 transition';
+        btnM.className = 'px-2 py-1 rounded-md text-slate-500 hover:text-slate-700 transition';
+      }
+    }
+
+    function renderActiveTab() {
+      const isFixed = currentTab === 'fixed_expenses';
+
       const monthPickerGroup = document.getElementById('monthPickerGroup');
       const categoryInputsWrapper = document.getElementById('categoryInputsWrapper');
-      const subscriptionInputsWrapper = document.getElementById('subscriptionInputsWrapper');
+      const itemInputsWrapper = document.getElementById('itemInputsWrapper');
       const monthlyTotalContainer = document.getElementById('monthlyTotalContainer');
       const chartTypeSelect = document.getElementById('chartTypeSelect');
       const manageCategoryBtn = document.getElementById('manageCategoryBtn');
 
-      if (isSub) {
-        monthPickerGroup.classList.add('hidden');
-        categoryInputsWrapper.classList.add('hidden');
-        monthlyTotalContainer.classList.add('hidden');
-        manageCategoryBtn.classList.add('hidden');
-        chartTypeSelect.classList.add('hidden');
-        subscriptionInputsWrapper.classList.remove('hidden');
+      if (isFixed) {
+        monthPickerGroup.classList.add('hidden'); categoryInputsWrapper.classList.add('hidden');
+        monthlyTotalContainer.classList.add('hidden'); manageCategoryBtn.classList.add('hidden');
+        chartTypeSelect.classList.add('hidden'); itemInputsWrapper.classList.remove('hidden');
 
-        document.getElementById('activeModuleTitle').innerText = 'ระบบบันทึกบริการ Subscription';
-        document.getElementById('activeModuleSub').innerText = 'ติดตามบริการรายเดือนและรายปีทั้งหมดที่คุณใช้งานอยู่';
-
-        document.getElementById('metric3Label').innerText = 'ค่าใช้จ่ายเฉลี่ย / เดือน';
-        document.getElementById('metric4Label').innerText = 'ค่าใช้จ่ายรวม / ปี';
+        document.getElementById('activeModuleTitle').innerText = 'Fixed Expenses Tracker';
+        document.getElementById('activeModuleSub').innerText = 'Track all your recurring fixed expenses and subscription services';
+        document.getElementById('metric3Label').innerText = 'Total Cost / Month';
+        document.getElementById('metric4Label').innerText = 'Total Cost / Year';
+        document.getElementById('metric1IconWrapper').className = "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2";
         document.getElementById('metric1Icon').className = "fa-solid fa-calculator";
+        document.getElementById('metric2IconWrapper').className = "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2";
         document.getElementById('metric2Icon').className = "fa-solid fa-credit-card";
-
-        document.getElementById('formTitle').innerText = 'เพิ่มบริการ Subscription';
+        document.getElementById('formTitle').innerText = 'Add Fixed Expense';
         document.getElementById('formHeaderIcon').className = 'fa-solid fa-circle-plus text-indigo-600';
         document.getElementById('chartHeaderIcon').className = 'fa-solid fa-chart-pie text-indigo-600';
-        document.getElementById('chartHeaderTitle').innerText = 'สัดส่วนค่าใช้จ่าย Subscription (คิดเป็นรายเดือน)';
-        document.getElementById('chartHeaderSub').innerText = 'สัดส่วนเปรียบเทียบภาระค่าใช้จ่ายในแต่ละบริการ';
-
+        document.getElementById('chartHeaderTitle').innerText = 'Fixed Expenses Breakdown';
+        document.getElementById('chartHeaderSub').innerText = 'Proportional comparison of fixed expenses across services';
         document.getElementById('tableHeaderIcon').className = 'fa-solid fa-repeat text-indigo-600';
-        document.getElementById('tableTitle').innerText = 'รายการ Subscription ทั้งหมด';
-        document.getElementById('tableSubTitle').innerText = 'บริการรายเดือนและรายปีที่เปิดใช้งานอยู่';
-
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.className = 'w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm';
+        document.getElementById('tableTitle').innerText = 'All Fixed Expenses';
+        document.getElementById('tableSubTitle').innerText = 'Active monthly and yearly fixed expenses';
+        document.getElementById('itemNameLabel').innerHTML = 'Expense / Service Name <span class="text-rose-500">*</span>';
+        document.getElementById('itemName').placeholder = 'e.g. House Rent, Netflix, Internet';
+        document.getElementById('itemPriceLabel').innerHTML = 'Price <span class="text-rose-500">*</span>';
+        document.getElementById('submitBtn').className = 'w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm';
+        setSubCycle(currentSubCycle);
       } else {
-        monthPickerGroup.classList.remove('hidden');
-        categoryInputsWrapper.classList.remove('hidden');
-        monthlyTotalContainer.classList.remove('hidden');
-        manageCategoryBtn.classList.remove('hidden');
-        chartTypeSelect.classList.remove('hidden');
-        subscriptionInputsWrapper.classList.add('hidden');
+        monthPickerGroup.classList.remove('hidden'); categoryInputsWrapper.classList.remove('hidden');
+        monthlyTotalContainer.classList.remove('hidden'); manageCategoryBtn.classList.remove('hidden');
+        chartTypeSelect.classList.remove('hidden'); itemInputsWrapper.classList.add('hidden');
 
-        document.getElementById('activeModuleTitle').innerText = isSavings ? 'ระบบบันทึกเงินเก็บประจำเดือน' : 'ระบบบันทึกค่าใช้จ่ายรายเดือน';
-        document.getElementById('activeModuleSub').innerText = isSavings ? 'จัดการข้อมูลการออมเงินและการเติบโตของทรัพย์สิน' : 'ติดตามค่าใช้จ่ายและภาระผูกพันประจำเดือน';
+        let colorText, colorBg, colorHover, colorLight;
+        let icon1, icon2, titleStr, subStr, metric3Str, formTitleStr, chartIconStr, tableIconStr;
 
-        document.getElementById('metric3Label').innerText = isSavings ? 'ประเภทสูงสุด (เดือนล่าสุด)' : 'หมวดสูงสุด (เดือนล่าสุด)';
-        document.getElementById('metric4Label').innerText = 'เดือนล่าสุด';
-        document.getElementById('metric1Icon').className = "fa-solid fa-trophy";
-        document.getElementById('metric2Icon').className = "fa-regular fa-calendar-check";
+        if (currentTab === 'savings') {
+          colorText = 'text-emerald-600'; colorBg = 'bg-emerald-600'; colorHover = 'hover:bg-emerald-700'; colorLight = 'bg-emerald-50';
+          titleStr = 'Monthly Savings Tracker'; subStr = 'Manage your savings and asset growth';
+          metric3Str = 'Top Category (Latest)'; formTitleStr = 'Record Savings';
+          icon1 = 'fa-trophy'; icon2 = 'fa-calendar-check'; chartIconStr = 'fa-chart-column'; tableIconStr = 'fa-table-list';
+        } else if (currentTab === 'income') {
+          colorText = 'text-cyan-600'; colorBg = 'bg-cyan-600'; colorHover = 'hover:bg-cyan-700'; colorLight = 'bg-cyan-50';
+          titleStr = 'Income Tracker'; subStr = 'Track income by period (monthly / yearly)';
+          metric3Str = 'Top Income Source'; formTitleStr = 'Record Income';
+          icon1 = 'fa-wallet'; icon2 = 'fa-money-bill-trend-up'; chartIconStr = 'fa-chart-line'; tableIconStr = 'fa-hand-holding-dollar';
+        } else if (currentTab === 'expenses') {
+          colorText = 'text-rose-600'; colorBg = 'bg-rose-600'; colorHover = 'hover:bg-rose-700'; colorLight = 'bg-rose-50';
+          titleStr = 'Variable Expenses Tracker'; subStr = 'Track variable expenses by period (monthly / yearly)';
+          metric3Str = 'Top Category (Latest)'; formTitleStr = 'Record Variable Expense';
+          icon1 = 'fa-trophy'; icon2 = 'fa-calendar-check'; chartIconStr = 'fa-chart-column'; tableIconStr = 'fa-table-list';
+        }
 
-        document.getElementById('metric4Sub').className = `text-base sm:text-lg font-semibold mt-1 truncate ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
+        document.getElementById('activeModuleTitle').innerText = titleStr;
+        document.getElementById('activeModuleSub').innerText = subStr;
+        document.getElementById('metric3Label').innerText = metric3Str;
+        document.getElementById('metric4Label').innerText = 'Latest Total';
+        document.getElementById('metric4Sub').className = `text-base sm:text-lg font-semibold mt-1 truncate ${colorText}`;
+        document.getElementById('monthlyFormTotal').className = `text-base font-semibold ${colorText}`;
 
-        document.getElementById('formTitle').innerText = isSavings ? 'บันทึกเงินเก็บประจำเดือน' : 'บันทึกค่าใช้จ่ายรายเดือน';
-        document.getElementById('formHeaderIcon').className = `fa-solid fa-circle-plus ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
-        document.getElementById('chartHeaderIcon').className = `fa-solid fa-chart-column ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
-        document.getElementById('chartHeaderTitle').innerText = 'กราฟแนวโน้มรายเดือน';
-        document.getElementById('chartHeaderSub').innerText = 'แสดงมูลค่ารวมและสัดส่วน ณ สิ้นเดือน';
+        document.getElementById('metric1Icon').className = `fa-solid ${icon1}`;
+        document.getElementById('metric1IconWrapper').className = `w-10 h-10 sm:w-12 sm:h-12 rounded-2xl ${colorLight} ${colorText} flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2`;
+        document.getElementById('metric2Icon').className = `fa-solid ${icon2}`;
+        document.getElementById('metric2IconWrapper').className = `w-10 h-10 sm:w-12 sm:h-12 rounded-2xl ${colorLight} ${colorText} flex items-center justify-center text-lg sm:text-xl flex-shrink-0 ml-2`;
 
-        document.getElementById('tableHeaderIcon').className = `fa-solid fa-table-list ${isSavings ? 'text-emerald-600' : 'text-rose-600'}`;
-        document.getElementById('tableTitle').innerText = 'ประวัติการอัปเดตยอดสุทธิ';
-        document.getElementById('tableSubTitle').innerText = 'ตารางแสดงรายการย้อนหลังและการเติบโตเทียบกับเดือนก่อนหน้า';
+        document.getElementById('formTitle').innerText = formTitleStr;
+        document.getElementById('formHeaderIcon').className = `fa-solid fa-circle-plus ${colorText} flex-shrink-0`;
+        document.getElementById('chartHeaderIcon').className = `fa-solid ${chartIconStr} ${colorText}`;
+        document.getElementById('chartHeaderTitle').innerText = 'Trend Chart';
+        document.getElementById('chartHeaderSub').innerText = 'Showing total values and proportions over time';
+        document.getElementById('tableHeaderIcon').className = `fa-solid ${tableIconStr} ${colorText}`;
+        document.getElementById('tableTitle').innerText = 'History Records';
+        document.getElementById('tableSubTitle').innerText = 'Table showing historical items and growth';
 
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.className = `w-full ${isSavings ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'} text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm`;
+        document.getElementById('submitBtn').className = `w-full ${colorBg} ${colorHover} text-white font-medium py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm`;
+
+        // Support toggle for Income and Variable Expenses
+        if (currentTab === 'income' || currentTab === 'expenses') {
+          document.getElementById('periodTypeToggle').classList.remove('hidden');
+          setPeriodType(currentPeriodType);
+        } else {
+          document.getElementById('periodTypeToggle').classList.add('hidden');
+          document.getElementById('entryMonth').classList.remove('hidden');
+          document.getElementById('entryYear').classList.add('hidden');
+          handlePeriodChange(document.getElementById('entryMonth').value);
+        }
 
         renderCategoryInputs();
-        handleMonthChange(document.getElementById('entryMonth').value);
       }
 
       updateMetrics();
@@ -551,48 +638,55 @@
     }
 
     function getCurrentCategories() {
-      return currentTab === 'savings' ? (Array.isArray(savingsCategories) ? savingsCategories : []) : (Array.isArray(expenseCategories) ? expenseCategories : []);
+      if (currentTab === 'savings') return savingsCategories;
+      if (currentTab === 'expenses') return expenseCategories;
+      if (currentTab === 'income') return incomeCategories;
+      return [];
     }
 
     function getCurrentDataMap() {
-      return currentTab === 'savings' ? savingsDataMap : expenseDataMap;
+      if (currentTab === 'savings') return savingsDataMap;
+      if (currentTab === 'expenses') return expenseDataMap;
+      if (currentTab === 'income') return incomeDataMap;
+      return {};
     }
 
     function formatCurrency(amount) {
-      return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 2 }).format(amount || 0);
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'THB', maximumFractionDigits: 2 }).format(amount || 0);
     }
 
-    function formatMonthYear(monthKey) {
-      if (!monthKey) return '-';
-      const [year, month] = monthKey.split('-');
-      return `${monthNamesThai[parseInt(month) - 1]} ${parseInt(year) + 543}`;
+    function formatPeriod(periodKey) {
+      if (!periodKey) return '-';
+      if (periodKey.length === 4) return `Year ${periodKey}`;
+      const parts = periodKey.split('-');
+      if (parts.length === 2) {
+        const year = parseInt(parts[0]);
+        const month = parseInt(parts[1]);
+        return `${monthNamesEn[month - 1]} ${year}`;
+      }
+      return periodKey;
     }
 
     function formatDateTime(isoStr) {
       if (!isoStr) return '-';
       const d = new Date(isoStr);
       if (isNaN(d.getTime())) return '-';
-      return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
 
     function preventArrowKeys(e) {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) {
-        e.preventDefault();
-      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) e.preventDefault();
     }
 
     function preventScrollChange(e) {
-      e.target.blur();
-      e.preventDefault();
+      e.target.blur(); e.preventDefault();
     }
 
     function maskNumberInput(val) {
       if (!val) return '';
       let cleanVal = val.toString().replace(/[^0-9.]/g, '');
       const parts = cleanVal.split('.');
-      if (parts.length > 2) {
-        cleanVal = parts[0] + '.' + parts.slice(1).join('');
-      }
+      if (parts.length > 2) cleanVal = parts[0] + '.' + parts.slice(1).join('');
 
       let [integerPart, decimalPart] = cleanVal.split('.');
       if (integerPart.length > 1) {
@@ -601,61 +695,59 @@
       }
 
       integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-      if (decimalPart !== undefined) {
-        decimalPart = decimalPart.slice(0, 2);
-        return `${integerPart}.${decimalPart}`;
-      }
-
+      if (decimalPart !== undefined) return `${integerPart}.${decimalPart.slice(0, 2)}`;
       return integerPart;
     }
 
     function parseInputValue(val) {
       if (!val) return 0;
-      const cleanVal = val.toString().replace(/,/g, '');
-      const parsed = parseFloat(cleanVal);
+      const parsed = parseFloat(val.toString().replace(/,/g, ''));
       return isNaN(parsed) ? 0 : parsed;
     }
 
     function formatDisplayValue(num) {
       if (num === undefined || num === null || num === '' || num === 0) return '';
       const n = parseFloat(num);
-      if (isNaN(n) || n === 0) return '';
-      return maskNumberInput(n.toString());
+      return (isNaN(n) || n === 0) ? '' : maskNumberInput(n.toString());
     }
 
     function handleInputMask(input) {
-      const masked = maskNumberInput(input.value);
-      input.value = masked;
-      if (currentTab !== 'subscription') {
-        calculateFormTotal();
-      }
+      input.value = maskNumberInput(input.value);
+      if (currentTab !== 'fixed_expenses') calculateFormTotal();
     }
 
-    function handleMonthChange(selectedMonth) {
-      if (!selectedMonth || currentTab === 'subscription') return;
+    function handlePeriodChange(selectedPeriod) {
+      if (!selectedPeriod || currentTab === 'fixed_expenses') return;
       const dataMap = getCurrentDataMap();
-      const record = dataMap[selectedMonth];
+      const record = dataMap[selectedPeriod];
 
       if (record) {
         document.getElementById('entryNote').value = record.note || '';
         document.querySelectorAll('.category-amount-input').forEach(input => {
-          const val = record.amounts && record.amounts[input.dataset.catId] !== undefined ? record.amounts[input.dataset.catId] : '';
+          const catId = input.dataset.catId;
+          const val = record.amounts && record.amounts[catId] !== undefined ? record.amounts[catId] : '';
           input.value = formatDisplayValue(val);
+
+          // รีเซ็ตค่า currency กลับเป็น THB เพื่อแสดงค่าจากฐานข้อมูลอย่างถูกต้อง
+          const select = document.querySelector(`.category-currency-select[data-cat-id="${catId}"]`);
+          if (select) select.value = 'THB';
         });
-        document.getElementById('submitBtnText').innerText = 'อัปเดตยอดเดือนนี้';
+        document.getElementById('submitBtnText').innerText = 'Update Record';
       } else {
-        const sortedMonths = Object.keys(dataMap).sort();
-        const latestMonthKey = sortedMonths.length > 0 ? sortedMonths[sortedMonths.length - 1] : null;
-        const latestRecord = latestMonthKey ? dataMap[latestMonthKey] : null;
+        const sortedPeriods = Object.keys(dataMap).sort();
+        const latestPeriod = sortedPeriods.length > 0 ? sortedPeriods[sortedPeriods.length - 1] : null;
+        const latestRecord = latestPeriod ? dataMap[latestPeriod] : null;
 
         document.getElementById('entryNote').value = '';
         document.querySelectorAll('.category-amount-input').forEach(input => {
           const catId = input.dataset.catId;
           const initVal = (latestRecord && latestRecord.amounts && latestRecord.amounts[catId] !== undefined) ? latestRecord.amounts[catId] : '';
           input.value = formatDisplayValue(initVal);
+
+          const select = document.querySelector(`.category-currency-select[data-cat-id="${catId}"]`);
+          if (select) select.value = 'THB';
         });
-        document.getElementById('submitBtnText').innerText = 'บันทึกข้อมูลใหม่';
+        document.getElementById('submitBtnText').innerText = 'Save New Record';
       }
       calculateFormTotal();
     }
@@ -666,7 +758,7 @@
       container.innerHTML = '';
 
       if (categories.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400 py-2 text-center">ยังไม่มีประเภทข้อมูล กด "+ จัดการประเภท" เพื่อเริ่มสร้าง</p>`;
+        container.innerHTML = `<p class="text-xs text-slate-400 py-2 text-center">No categories found. Click "+ Manage Categories" to create one.</p>`;
         calculateFormTotal();
         return;
       }
@@ -675,30 +767,29 @@
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between gap-2 bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/60';
         div.innerHTML = `
-                    <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
-                        <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
-                        <span class="text-xs font-medium text-slate-700 truncate">${cat.name}</span>
-                    </div>
-                    <div class="flex items-center gap-1 flex-shrink-0">
-                      <input type="text" 
-                             inputmode="decimal" 
-                             data-cat-id="${cat.id}" 
-                             placeholder="0" 
-                             oninput="handleInputMask(this)" 
-                             onfocus="this.select()"
-                             onkeydown="preventArrowKeys(event)"
-                             onwheel="preventScrollChange(event)"
-                             class="category-amount-input w-24 sm:w-28 text-right px-2 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                      <select data-cat-id="${cat.id}" onchange="calculateFormTotal()"
-                        class="category-currency-select px-1.5 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-slate-600 font-medium">
-                        <option value="THB">฿ THB</option>
-                        <option value="USD">$ USD</option>
-                      </select>
-                    </div>
-                `;
+            <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
+                <span class="text-xs font-medium text-slate-700 truncate">${escapeHtml(cat.name)}</span>
+            </div>
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <input type="text" inputmode="decimal" data-cat-id="${cat.id}" placeholder="0" 
+                     oninput="handleInputMask(this)" onfocus="this.select()"
+                     onkeydown="preventArrowKeys(event)" onwheel="preventScrollChange(event)"
+                     class="category-amount-input w-24 sm:w-28 text-right px-2 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm outline-none focus:ring-2">
+              <select data-cat-id="${cat.id}" onchange="calculateFormTotal()"
+                class="category-currency-select px-1.5 py-1 sm:py-1.5 border border-slate-300 rounded-lg text-xs outline-none bg-white text-slate-600 font-medium focus:ring-2">
+                <option value="THB">฿ THB</option>
+                <option value="USD">$ USD</option>
+              </select>
+            </div>
+        `;
         container.appendChild(div);
       });
-      calculateFormTotal();
+
+      const currentPeriod = currentPeriodType === 'yearly'
+        ? document.getElementById('entryYear').value
+        : document.getElementById('entryMonth').value;
+      handlePeriodChange(currentPeriod);
     }
 
     function calculateFormTotal() {
@@ -706,76 +797,65 @@
       document.querySelectorAll('.category-amount-input').forEach(input => {
         const catId = input.dataset.catId;
         const select = document.querySelector(`.category-currency-select[data-cat-id="${catId}"]`);
-        const currency = select ? select.value : 'THB';
         let val = parseInputValue(input.value);
-
-        // แปลงเป็น THB หากระบุเป็น USD
-        if (currency === 'USD') {
-          val = val * USD_TO_THB_RATE;
-        }
-
+        if (select && select.value === 'USD') val = val * USD_TO_THB_RATE;
         total += val;
       });
-
-      const totalEl = document.getElementById('monthlyFormTotal');
-      totalEl.innerText = formatCurrency(total);
-      totalEl.className = `text-base font-semibold ${currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600'}`;
+      document.getElementById('monthlyFormTotal').innerText = formatCurrency(total);
     }
 
     async function handleFormSubmit(e) {
       e.preventDefault();
 
-      if (currentTab === 'subscription') {
+      if (currentTab === 'fixed_expenses') {
         const id = document.getElementById('editingSubId').value;
-        const name = document.getElementById('subName').value.trim();
-        let price = parseInputValue(document.getElementById('subPrice').value);
-        const currency = document.getElementById('subCurrency').value;
-        const cycle = document.getElementById('subCycle').value;
-        const color = document.getElementById('subColor').value;
+        const name = document.getElementById('itemName').value.trim();
+        let amountVal = parseInputValue(document.getElementById('itemPrice').value);
+        if (document.getElementById('itemCurrency').value === 'USD') amountVal *= USD_TO_THB_RATE;
+        const cycle = currentSubCycle;
+        const color = document.getElementById('itemColor').value;
         const note = document.getElementById('entryNote').value.trim() || null;
 
-        if (!name) return alert('กรุณาระบุชื่อบริการ');
-        if (price <= 0) return alert('กรุณาระบุราคาที่ถูกต้อง');
+        if (!name || amountVal <= 0) return alert('Please enter valid and complete information.');
 
-        // แปลง USD -> THB ก่อนลง DB
-        if (currency === 'USD') {
-          price = price * USD_TO_THB_RATE;
-        }
-
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? `/api/subscriptions/${id}` : '/api/subscriptions';
-
-        await fetch(url, {
-          method,
+        await fetch(id ? `/api/subscriptions/${id}` : '/api/subscriptions', {
+          method: id ? 'PUT' : 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, price, cycle, color, note })
+          body: JSON.stringify({ name, price: amountVal, cycle, color, note })
         });
       } else {
-        const month = document.getElementById('entryMonth').value;
         const note = document.getElementById('entryNote').value.trim() || null;
         const amounts = {};
         let total = 0;
+        let period = '';
+
+        if ((currentTab === 'income' || currentTab === 'expenses') && currentPeriodType === 'yearly') {
+          period = document.getElementById('entryYear').value;
+        } else {
+          period = document.getElementById('entryMonth').value;
+        }
 
         document.querySelectorAll('.category-amount-input').forEach(input => {
           const catId = input.dataset.catId;
           const select = document.querySelector(`.category-currency-select[data-cat-id="${catId}"]`);
-          const currency = select ? select.value : 'THB';
           let val = parseInputValue(input.value);
-
-          // แปลง USD -> THB ก่อนลง DB
-          if (currency === 'USD') {
-            val = val * USD_TO_THB_RATE;
-          }
-
+          if (select && select.value === 'USD') val *= USD_TO_THB_RATE;
           amounts[catId] = val;
           total += val;
         });
 
-        const endpoint = currentTab === 'savings' ? '/api/logs' : '/api/expense-logs';
+        let endpoint = '/api/logs';
+        if (currentTab === 'expenses') endpoint = '/api/expense-logs';
+        if (currentTab === 'income') endpoint = '/api/income-logs';
+
+        const bodyData = (currentTab === 'income' || currentTab === 'expenses')
+          ? { period, period_type: currentPeriodType, amounts, total, note }
+          : { month: period, amounts, total, note };
+
         await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ month, amounts, total, note })
+          body: JSON.stringify(bodyData)
         });
       }
 
@@ -788,62 +868,84 @@
       document.getElementById('mainForm').reset();
       document.getElementById('editingSubId').value = '';
       document.getElementById('cancelEditBtn').classList.add('hidden');
-      document.getElementById('subColor').value = '#6366f1';
+      document.getElementById('itemColor').value = '#6366f1';
+      if (document.getElementById('itemCurrency')) document.getElementById('itemCurrency').value = 'THB';
+      setSubCycle('monthly');
 
-      const subCurrency = document.getElementById('subCurrency');
-      if (subCurrency) subCurrency.value = 'THB';
-
-      if (currentTab === 'subscription') {
-        document.getElementById('formTitle').innerText = 'เพิ่มบริการ Subscription';
-        document.getElementById('submitBtnText').innerText = 'บันทึกบริการ';
+      if (currentTab === 'fixed_expenses') {
+        document.getElementById('formTitle').innerText = 'Add Fixed Expense';
+        document.getElementById('submitBtnText').innerText = 'Save Fixed Expense';
       } else {
         const currentMonth = new Date().toISOString().slice(0, 7);
-        document.getElementById('entryMonth').value = currentMonth;
-        document.getElementById('formTitle').innerText = currentTab === 'savings' ? 'บันทึกเงินเก็บประจำเดือน' : 'บันทึกค่าใช้จ่ายรายเดือน';
-        handleMonthChange(currentMonth);
+        const currentYear = new Date().getFullYear().toString();
+
+        if ((currentTab === 'income' || currentTab === 'expenses') && currentPeriodType === 'yearly') {
+          document.getElementById('entryYear').value = currentYear;
+          handlePeriodChange(currentYear);
+        } else {
+          document.getElementById('entryMonth').value = currentMonth;
+          handlePeriodChange(currentMonth);
+        }
+
+        if (currentTab === 'savings') document.getElementById('formTitle').innerText = 'Record Savings';
+        if (currentTab === 'income') document.getElementById('formTitle').innerText = 'Record Income';
+        if (currentTab === 'expenses') document.getElementById('formTitle').innerText = 'Record Variable Expense';
       }
     }
 
-    function editRecord(monthKey) {
-      document.getElementById('entryMonth').value = monthKey;
-      handleMonthChange(monthKey);
+    function editRecord(periodKey) {
+      if (currentTab === 'income' || currentTab === 'expenses') {
+        const record = getCurrentDataMap()[periodKey];
+        if (record && record.period_type === 'yearly') {
+          setPeriodType('yearly');
+          document.getElementById('entryYear').value = periodKey;
+        } else {
+          setPeriodType('monthly');
+          document.getElementById('entryMonth').value = periodKey;
+        }
+      } else {
+        document.getElementById('entryMonth').value = periodKey;
+      }
+      handlePeriodChange(periodKey);
 
-      document.getElementById('formTitle').innerText = `แก้ไขข้อมูล (${formatMonthYear(monthKey)})`;
+      document.getElementById('formTitle').innerText = `Edit Record (${formatPeriod(periodKey)})`;
       document.getElementById('cancelEditBtn').classList.remove('hidden');
-
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    async function deleteRecord(monthKey) {
-      if (confirm(`คุณต้องการลบข้อมูลเดือน ${formatMonthYear(monthKey)} หรือไม่?`)) {
-        const endpoint = currentTab === 'savings' ? `/api/logs/${monthKey}` : `/api/expense-logs/${monthKey}`;
+    async function deleteRecord(periodKey) {
+      if (confirm(`Are you sure you want to delete the record for ${formatPeriod(periodKey)}?`)) {
+        let endpoint = '';
+        if (currentTab === 'savings') endpoint = `/api/logs/${periodKey}`;
+        else if (currentTab === 'expenses') endpoint = `/api/expense-logs/${periodKey}`;
+        else if (currentTab === 'income') endpoint = `/api/income-logs/${periodKey}`;
+
         await fetch(endpoint, { method: 'DELETE' });
         await fetchAllData();
         renderActiveTab();
       }
     }
 
-    function editSubscription(id) {
-      const sub = subscriptionsList.find(s => s.id == id);
-      if (!sub) return;
+    function editItem(id) {
+      const item = subscriptionsList.find(s => s.id == id);
+      if (!item) return;
 
-      document.getElementById('editingSubId').value = sub.id;
-      document.getElementById('subName').value = sub.name;
-      document.getElementById('subPrice').value = formatDisplayValue(sub.price);
-      document.getElementById('subCurrency').value = 'THB'; // ค่าที่ดึงจาก DB เป็น บาท (THB) แล้ว
-      document.getElementById('subCycle').value = sub.cycle || 'monthly';
-      document.getElementById('subColor').value = sub.color || '#6366f1';
-      document.getElementById('entryNote').value = sub.note || '';
+      document.getElementById('editingSubId').value = item.id;
+      document.getElementById('itemName').value = item.name;
+      document.getElementById('itemPrice').value = formatDisplayValue(item.price);
+      document.getElementById('itemCurrency').value = 'THB';
+      setSubCycle(item.cycle || 'monthly');
+      document.getElementById('itemColor').value = item.color || '#6366f1';
+      document.getElementById('entryNote').value = item.note || '';
 
-      document.getElementById('formTitle').innerText = `แก้ไขบริการ ${sub.name}`;
-      document.getElementById('submitBtnText').innerText = 'บันทึกการแก้ไข';
+      document.getElementById('formTitle').innerText = `Edit ${item.name}`;
+      document.getElementById('submitBtnText').innerText = 'Save Changes';
       document.getElementById('cancelEditBtn').classList.remove('hidden');
-
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    async function deleteSubscription(id) {
-      if (confirm('คุณต้องการลบบริการ Subscription นี้หรือไม่?')) {
+    async function deleteItem(id) {
+      if (confirm('Are you sure you want to delete this fixed expense?')) {
         await fetch(`/api/subscriptions/${id}`, { method: 'DELETE' });
         await fetchAllData();
         renderActiveTab();
@@ -851,35 +953,26 @@
     }
 
     function updateMetrics() {
-      if (currentTab === 'subscription') {
-        let monthlyCost = 0;
-        let yearlyCost = 0;
-
-        subscriptionsList.forEach(sub => {
-          const price = Number(sub.price) || 0;
-          if (sub.cycle === 'yearly') {
-            yearlyCost += price;
-            monthlyCost += price / 12;
-          } else {
-            monthlyCost += price;
-            yearlyCost += price * 12;
-          }
+      if (currentTab === 'fixed_expenses') {
+        let monthlyCost = 0, yearlyCost = 0;
+        subscriptionsList.forEach(item => {
+          const amt = Number(item.price) || 0;
+          if (item.cycle === 'yearly') { yearlyCost += amt; monthlyCost += amt / 12; }
+          else { monthlyCost += amt; yearlyCost += amt * 12; }
         });
 
         document.getElementById('metric3Value').innerText = formatCurrency(monthlyCost);
-        document.getElementById('metric3Sub').innerText = 'เฉลี่ยต่อเดือน';
-        document.getElementById('metric4Sub').className = 'text-base sm:text-lg font-semibold text-indigo-600 mt-1 truncate';
+        document.getElementById('metric3Sub').innerText = 'Total per month';
         document.getElementById('metric4Sub').innerText = formatCurrency(yearlyCost);
-        document.getElementById('metric4Value').innerText = `รวม ${subscriptionsList.length} รายการ`;
+        document.getElementById('metric4Value').innerText = `Total ${subscriptionsList.length} items`;
         return;
       }
 
       const dataMap = getCurrentDataMap();
       const categories = getCurrentCategories();
-      const sortedMonths = Object.keys(dataMap).sort();
-      const totalMonths = sortedMonths.length;
+      const sortedPeriods = Object.keys(dataMap).sort();
 
-      if (totalMonths === 0) {
+      if (sortedPeriods.length === 0) {
         document.getElementById('metric3Value').innerText = '-';
         document.getElementById('metric3Sub').innerText = '฿0';
         document.getElementById('metric4Value').innerText = '-';
@@ -887,12 +980,10 @@
         return;
       }
 
-      const latestMonthKey = sortedMonths[sortedMonths.length - 1];
-      const latestRecord = dataMap[latestMonthKey];
-
-      const latestTotal = latestRecord.total;
-
+      const latestPeriod = sortedPeriods[sortedPeriods.length - 1];
+      const latestRecord = dataMap[latestPeriod];
       let topCatId = null, maxAmt = -1;
+
       if (latestRecord.amounts) {
         Object.keys(latestRecord.amounts).forEach(cId => {
           const amt = latestRecord.amounts[cId] || 0;
@@ -903,73 +994,55 @@
       const topCatObj = categories.find(c => c.id === topCatId);
       document.getElementById('metric3Value').innerText = topCatObj && maxAmt > 0 ? topCatObj.name : '-';
       document.getElementById('metric3Sub').innerText = topCatObj && maxAmt > 0 ? formatCurrency(maxAmt) : '฿0';
-
-      document.getElementById('metric4Value').innerText = formatMonthYear(latestMonthKey);
-      document.getElementById('metric4Sub').innerText = formatCurrency(latestTotal);
+      document.getElementById('metric4Value').innerText = formatPeriod(latestPeriod);
+      document.getElementById('metric4Sub').innerText = formatCurrency(latestRecord.total);
     }
 
     function renderActiveTabTable() {
-      if (currentTab === 'subscription') {
-        renderSubscriptionTable();
-      } else {
-        renderTable();
-      }
+      if (currentTab === 'fixed_expenses') renderItemTable();
+      else renderTable();
     }
 
-    function renderSubscriptionTable() {
+    function renderItemTable() {
       const headerRow = document.getElementById('tableHeaderRow');
       const tbody = document.getElementById('mainTableBody');
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
       headerRow.innerHTML = `
-        <th class="p-3 sm:p-4">บริการ / แอปพลิเคชัน</th>
-        <th class="p-3 sm:p-4 text-right">ราคา (บาท)</th>
-        <th class="p-3 sm:p-4 text-center">รอบชำระเงิน</th>
-        <th class="p-3 sm:p-4 text-right">คำนวณเฉลี่ย/เดือน (บาท)</th>
-        <th class="p-3 sm:p-4">หมายเหตุ</th>
-        <th class="p-3 sm:p-4 text-center">จัดการ</th>
+        <th class="p-3 sm:p-4">Expense / Service</th>
+        <th class="p-3 sm:p-4 text-right">Price (THB)</th>
+        <th class="p-3 sm:p-4 text-center">Billing Cycle</th>
+        <th class="p-3 sm:p-4 text-right">Avg./Month (THB)</th>
+        <th class="p-3 sm:p-4">Note</th>
+        <th class="p-3 sm:p-4 text-center">Actions</th>
       `;
-
       tbody.innerHTML = '';
 
-      let filteredSubs = subscriptionsList.filter(sub => {
-        const nameMatch = (sub.name || '').toLowerCase().includes(searchQuery);
-        const noteMatch = (sub.note || '').toLowerCase().includes(searchQuery);
-        return nameMatch || noteMatch;
-      });
+      let filteredItems = subscriptionsList.filter(item =>
+        (item.name || '').toLowerCase().includes(searchQuery) || (item.note || '').toLowerCase().includes(searchQuery)
+      );
 
-      if (filteredSubs.length === 0) {
-        document.getElementById('emptyTableState').classList.remove('hidden');
-        return;
-      }
+      if (filteredItems.length === 0) return document.getElementById('emptyTableState').classList.remove('hidden');
       document.getElementById('emptyTableState').classList.add('hidden');
 
-      filteredSubs.forEach(sub => {
+      filteredItems.forEach(item => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 text-slate-700';
-
-        const price = Number(sub.price) || 0;
-        const isYearly = sub.cycle === 'yearly';
-        const monthlyEquivalent = isYearly ? price / 12 : price;
-
+        const amt = Number(item.price) || 0;
+        const isYearly = item.cycle === 'yearly';
         const cycleBadge = isYearly
-          ? `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 whitespace-nowrap">รายปี</span>`
-          : `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 whitespace-nowrap">รายเดือน</span>`;
+          ? `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 whitespace-nowrap">Yearly</span>`
+          : `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 whitespace-nowrap">Monthly</span>`;
 
         tr.innerHTML = `
-          <td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${sub.color || '#6366f1'}"></span>
-              <span>${sub.name}</span>
-            </div>
-          </td>
-          <td class="p-3 sm:p-4 text-right font-semibold font-mono text-indigo-600">${formatCurrency(price)}</td>
+          <td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${escapeHtml(item.color)}"></span><span>${escapeHtml(item.name)}</span></div></td>
+          <td class="p-3 sm:p-4 text-right font-semibold font-mono text-indigo-600">${formatCurrency(amt)}</td>
           <td class="p-3 sm:p-4 text-center">${cycleBadge}</td>
-          <td class="p-3 sm:p-4 text-right font-mono text-slate-600">${formatCurrency(monthlyEquivalent)}</td>
-          <td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] sm:max-w-[200px] truncate" title="${sub.note || ''}">${sub.note || '-'}</td>
+          <td class="p-3 sm:p-4 text-right font-mono text-slate-600">${formatCurrency(isYearly ? amt / 12 : amt)}</td>
+          <td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] truncate">${escapeHtml(item.note) || '-'}</td>
           <td class="p-3 sm:p-4 text-center whitespace-nowrap">
-            <button onclick="editSubscription('${sub.id}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-1.5 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button onclick="deleteSubscription('${sub.id}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
+            <button onclick="editItem('${item.id}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-1.5 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteItem('${item.id}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -983,67 +1056,61 @@
       const categories = getCurrentCategories();
       const dataMap = getCurrentDataMap();
 
-      headerRow.innerHTML = `<th class="p-3 sm:p-4">เดือน / ปี</th>`;
-      categories.forEach(cat => headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">${cat.name} (บาท)</th>`);
-      headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">ยอดรวม (บาท)</th><th class="p-3 sm:p-4 text-center">เปลี่ยนแปลง</th><th class="p-3 sm:p-4">หมายเหตุ</th><th class="p-3 sm:p-4 text-center">วันเวลาบันทึก</th><th class="p-3 sm:p-4 text-center">จัดการ</th>`;
-
+      headerRow.innerHTML = `<th class="p-3 sm:p-4">Period</th>`;
+      categories.forEach(cat => headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">${escapeHtml(cat.name)} (THB)</th>`);
+      headerRow.innerHTML += `<th class="p-3 sm:p-4 text-right">Total (THB)</th><th class="p-3 sm:p-4 text-center">Change</th><th class="p-3 sm:p-4">Note</th><th class="p-3 sm:p-4 text-center">Updated At</th><th class="p-3 sm:p-4 text-center">Actions</th>`;
       tbody.innerHTML = '';
-      const sortedMonthsAsc = Object.keys(dataMap).sort();
-      const sortedMonthsDesc = [...sortedMonthsAsc].reverse();
 
-      let filteredMonths = sortedMonthsDesc.filter(mKey => {
-        const rec = dataMap[mKey];
-        const noteMatch = (rec.note || '').toLowerCase().includes(searchQuery);
-        const monthMatch = formatMonthYear(mKey).toLowerCase().includes(searchQuery) || mKey.includes(searchQuery);
-        return noteMatch || monthMatch;
+      const sortedPeriodsAsc = Object.keys(dataMap).sort();
+      const sortedPeriodsDesc = [...sortedPeriodsAsc].reverse();
+
+      let filteredPeriods = sortedPeriodsDesc.filter(pKey => {
+        const rec = dataMap[pKey];
+        return (rec.note || '').toLowerCase().includes(searchQuery) || formatPeriod(pKey).toLowerCase().includes(searchQuery) || pKey.includes(searchQuery);
       });
 
-      if (filteredMonths.length === 0) {
-        document.getElementById('emptyTableState').classList.remove('hidden');
-        return;
-      }
+      if (filteredPeriods.length === 0) return document.getElementById('emptyTableState').classList.remove('hidden');
       document.getElementById('emptyTableState').classList.add('hidden');
 
-      filteredMonths.forEach(mKey => {
-        const record = dataMap[mKey];
+      filteredPeriods.forEach(pKey => {
+        const record = dataMap[pKey];
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 text-slate-700';
 
-        let rowHTML = `<td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap">${formatMonthYear(mKey)}</td>`;
+        let periodBadge = formatPeriod(pKey);
+        if (record.period_type === 'yearly') {
+          periodBadge += ` <span class="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-normal ml-1">Yearly</span>`;
+        }
 
+        let rowHTML = `<td class="p-3 sm:p-4 font-semibold text-slate-800 whitespace-nowrap">${periodBadge}</td>`;
         categories.forEach(cat => {
           const amt = record.amounts ? (record.amounts[cat.id] || 0) : 0;
           rowHTML += `<td class="p-3 sm:p-4 text-right font-mono text-slate-600">${amt > 0 ? formatCurrency(amt) : '-'}</td>`;
         });
 
-        const totalColorClass = currentTab === 'savings' ? 'text-emerald-600' : 'text-rose-600';
+        const totalColorClass = currentTab === 'savings' ? 'text-emerald-600' : (currentTab === 'income' ? 'text-cyan-600' : 'text-rose-600');
         rowHTML += `<td class="p-3 sm:p-4 text-right font-semibold font-mono ${totalColorClass}">${formatCurrency(record.total)}</td>`;
 
-        const currentIndex = sortedMonthsAsc.indexOf(mKey);
+        const currentIndex = sortedPeriodsAsc.indexOf(pKey);
         let diffBadge = `<span class="text-xs text-slate-400">-</span>`;
         if (currentIndex > 0) {
-          const prevKey = sortedMonthsAsc[currentIndex - 1];
+          const prevKey = sortedPeriodsAsc[currentIndex - 1];
           const diff = record.total - dataMap[prevKey].total;
-          if (diff > 0) {
-            const bg = currentTab === 'savings' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600';
-            diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-up mr-1"></i>+${formatCurrency(diff)}</span>`;
-          } else if (diff < 0) {
-            const bg = currentTab === 'savings' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600';
-            diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bg} whitespace-nowrap"><i class="fa-solid fa-arrow-down mr-1"></i>${formatCurrency(diff)}</span>`;
-          } else {
-            diffBadge = `<span class="text-[11px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">เท่าเดิม</span>`;
-          }
+          const bgPos = currentTab === 'expenses' ? 'bg-rose-50 text-rose-600' : (currentTab === 'income' ? 'bg-cyan-50 text-cyan-600' : 'bg-emerald-50 text-emerald-600');
+          const bgNeg = currentTab === 'expenses' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600';
+
+          if (diff > 0) diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bgPos} whitespace-nowrap"><i class="fa-solid fa-arrow-up mr-1"></i>+${formatCurrency(diff)}</span>`;
+          else if (diff < 0) diffBadge = `<span class="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${bgNeg} whitespace-nowrap"><i class="fa-solid fa-arrow-down mr-1"></i>${formatCurrency(diff)}</span>`;
+          else diffBadge = `<span class="text-[11px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">Unchanged</span>`;
         }
 
         rowHTML += `<td class="p-3 sm:p-4 text-center whitespace-nowrap">${diffBadge}</td>`;
-        rowHTML += `<td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] sm:max-w-[200px] truncate" title="${record.note || ''}">${record.note || '-'}</td>`;
+        rowHTML += `<td class="p-3 sm:p-4 text-xs text-slate-600 max-w-[150px] truncate">${escapeHtml(record.note) || '-'}</td>`;
         rowHTML += `<td class="p-3 sm:p-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDateTime(record.updated_at)}</td>`;
-        rowHTML += `
-                    <td class="p-3 sm:p-4 text-center whitespace-nowrap">
-                        <button onclick="editRecord('${mKey}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-1.5 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteRecord('${mKey}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                `;
+        rowHTML += `<td class="p-3 sm:p-4 text-center whitespace-nowrap">
+            <button onclick="editRecord('${pKey}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 p-1.5 rounded-lg transition mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteRecord('${pKey}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
+        </td>`;
         tr.innerHTML = rowHTML;
         tbody.appendChild(tr);
       });
@@ -1063,20 +1130,14 @@
       });
     }
 
+    // 3. Process & Average Yearly items into Monthly chart labels
     function getChartData(chartType) {
-      if (currentTab === 'subscription') {
-        const labels = subscriptionsList.map(s => s.name);
-        const data = subscriptionsList.map(s => {
-          const price = Number(s.price) || 0;
-          return s.cycle === 'yearly' ? price / 12 : price;
-        });
-        const backgroundColor = subscriptionsList.map(s => s.color || '#6366f1');
-
+      if (currentTab === 'fixed_expenses') {
         return {
-          labels,
+          labels: subscriptionsList.map(s => s.name),
           datasets: [{
-            data,
-            backgroundColor,
+            data: subscriptionsList.map(s => s.cycle === 'yearly' ? s.price / 12 : s.price),
+            backgroundColor: subscriptionsList.map(s => s.color || '#6366f1'),
             hoverOffset: 6
           }]
         };
@@ -1084,20 +1145,52 @@
 
       const dataMap = getCurrentDataMap();
       const categories = getCurrentCategories();
-      const sortedMonths = Object.keys(dataMap).sort();
-      const labels = sortedMonths.map(mKey => formatMonthYear(mKey));
+
+      // Get all period keys (YYYY-MM and YYYY)
+      const rawPeriods = Object.keys(dataMap);
+
+      // Separate monthly keys and yearly logs
+      const monthlyKeys = new Set(rawPeriods.filter(p => p.length === 7));
+      const yearlyLogs = rawPeriods.filter(p => p.length === 4).map(y => dataMap[y]);
+
+      // If no monthly logs exist, fill with months of available yearly logs or current year
+      if (monthlyKeys.size === 0) {
+        if (yearlyLogs.length > 0) {
+          yearlyLogs.forEach(yl => {
+            for (let m = 1; m <= 12; m++) {
+              monthlyKeys.add(`${yl.period}-${String(m).padStart(2, '0')}`);
+            }
+          });
+        } else {
+          const currentY = new Date().getFullYear();
+          for (let m = 1; m <= 12; m++) {
+            monthlyKeys.add(`${currentY}-${String(m).padStart(2, '0')}`);
+          }
+        }
+      }
+
+      const sortedMonthlyKeys = Array.from(monthlyKeys).sort();
+      const labels = sortedMonthlyKeys.map(p => formatPeriod(p));
 
       if (chartType === 'line') {
-        const lineThemeColor = currentTab === 'savings' ? '#10b981' : '#ef4444';
+        const lineThemeColor = currentTab === 'savings' ? '#10b981' : (currentTab === 'income' ? '#06b6d4' : '#ef4444');
+        const totals = sortedMonthlyKeys.map(mKey => {
+          let total = dataMap[mKey] ? dataMap[mKey].total : 0;
+          const year = mKey.slice(0, 4);
+          if (dataMap[year] && dataMap[year].period_type === 'yearly') {
+            total += (dataMap[year].total / 12);
+          }
+          return total;
+        });
+
         return {
           labels,
           datasets: [{
-            label: currentTab === 'savings' ? 'ยอดเงินเก็บรวม' : 'ยอดค่าใช้จ่ายรวม',
-            data: sortedMonths.map(mKey => dataMap[mKey].total),
+            label: 'Total Amount (Monthly Avg)',
+            data: totals,
             borderColor: lineThemeColor,
             backgroundColor: lineThemeColor + '20',
-            fill: true,
-            tension: 0.3
+            fill: true, tension: 0.3
           }]
         };
       }
@@ -1106,7 +1199,15 @@
         labels,
         datasets: categories.map(cat => ({
           label: cat.name,
-          data: sortedMonths.map(mKey => (dataMap[mKey].amounts ? dataMap[mKey].amounts[cat.id] || 0 : 0)),
+          data: sortedMonthlyKeys.map(mKey => {
+            let catAmt = dataMap[mKey] && dataMap[mKey].amounts ? (dataMap[mKey].amounts[cat.id] || 0) : 0;
+            const year = mKey.slice(0, 4);
+            // Average yearly logs onto monthly columns
+            if (dataMap[year] && dataMap[year].period_type === 'yearly' && dataMap[year].amounts) {
+              catAmt += ((dataMap[year].amounts[cat.id] || 0) / 12);
+            }
+            return catAmt;
+          }),
           backgroundColor: cat.color,
           borderRadius: 4
         }))
@@ -1116,36 +1217,65 @@
     function updateChart() {
       if (!chartInstance) return;
 
-      if (currentTab === 'subscription') {
-        chartInstance.config.type = 'pie';
-        chartInstance.data = getChartData();
-        chartInstance.options.scales = { x: { display: false }, y: { display: false } };
-        chartInstance.options.plugins.tooltip = {
-          callbacks: {
-            label: function (context) {
-              const label = context.label || '';
-              const val = context.raw || 0;
-              return ` ${label}: ${formatCurrency(val)} / เดือน`;
-            }
+      if (currentTab === 'fixed_expenses') {
+        chartInstance.destroy();
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+          type: 'pie',
+          data: getChartData(),
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { font: { family: 'Kanit', size: 11 }, usePointStyle: true } },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.label || ''}: ${formatCurrency(context.raw || 0)} / month`;
+                  }
+                }
+              }
+            },
+            scales: { x: { display: false }, y: { display: false } }
           }
-        };
+        });
       } else {
         const chartType = document.getElementById('chartTypeSelect').value;
-        chartInstance.config.type = chartType === 'line' ? 'line' : 'bar';
-        chartInstance.data = getChartData(chartType);
-        chartInstance.options.scales = {
-          x: { display: true, stacked: (chartType !== 'line') },
-          y: { display: true, stacked: (chartType !== 'line'), ticks: { callback: v => '฿' + v.toLocaleString() } }
-        };
-        chartInstance.options.plugins.tooltip = {};
-      }
+        const targetType = chartType === 'line' ? 'line' : 'bar';
 
-      chartInstance.update();
+        if (chartInstance.config.type !== targetType) {
+          chartInstance.destroy();
+          const ctx = document.getElementById('mainChart').getContext('2d');
+          chartInstance = new Chart(ctx, {
+            type: targetType,
+            data: getChartData(chartType),
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit', size: 11 }, usePointStyle: true } } },
+              scales: {
+                x: { display: true, stacked: (targetType !== 'line') },
+                y: { display: true, stacked: (targetType !== 'line'), ticks: { callback: v => '฿' + v.toLocaleString() } }
+              }
+            }
+          });
+        } else {
+          chartInstance.data = getChartData(chartType);
+          chartInstance.options.scales = {
+            x: { display: true, stacked: (chartType !== 'line') },
+            y: { display: true, stacked: (chartType !== 'line'), ticks: { callback: v => '฿' + v.toLocaleString() } }
+          };
+          chartInstance.options.plugins.tooltip = {};
+          chartInstance.update();
+        }
+      }
     }
 
     function openCategoryModal() {
       renderCategoryListModal();
-      document.getElementById('categoryModalTitle').innerText = currentTab === 'savings' ? 'จัดการประเภทเงินเก็บ' : 'จัดการประเภทค่าใช้จ่าย';
+      let modalTitle = 'Manage Savings Categories';
+      if (currentTab === 'expenses') modalTitle = 'Manage Variable Expense Categories';
+      if (currentTab === 'income') modalTitle = 'Manage Income Categories';
+
+      document.getElementById('categoryModalTitle').innerHTML = `<i class="fa-solid fa-tags text-slate-600"></i> ${modalTitle}`;
       document.getElementById('categoryModal').classList.remove('hidden');
     }
 
@@ -1159,19 +1289,12 @@
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-200';
         div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color: ${cat.color}"></span>
-                        <span class="text-xs sm:text-sm font-medium text-slate-700">${cat.name}</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <button onclick="openEditCategoryModal('${cat.id}')" type="button" class="text-slate-400 hover:text-blue-600 p-1">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button onclick="deleteCategory('${cat.id}')" type="button" class="text-slate-400 hover:text-rose-600 p-1">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                `;
+          <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color: ${escapeHtml(cat.color)}"></span><span class="text-xs sm:text-sm font-medium text-slate-700">${escapeHtml(cat.name)}</span></div>
+          <div class="flex items-center gap-1">
+              <button onclick="openEditCategoryModal('${cat.id}')" type="button" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="deleteCategory('${cat.id}')" type="button" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        `;
         container.appendChild(div);
       });
     }
@@ -1182,7 +1305,10 @@
       const name = document.getElementById('newCatName').value.trim();
       const color = document.getElementById('newCatColor').value;
 
-      const endpoint = currentTab === 'savings' ? '/api/categories' : '/api/expense-categories';
+      let endpoint = '/api/categories';
+      if (currentTab === 'expenses') endpoint = '/api/expense-categories';
+      if (currentTab === 'income') endpoint = '/api/income-categories';
+
       await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1196,20 +1322,15 @@
     }
 
     function openEditCategoryModal(catId) {
-      const categories = getCurrentCategories();
-      const cat = categories.find(c => c.id === catId);
+      const cat = getCurrentCategories().find(c => c.id === catId);
       if (!cat) return;
-
       document.getElementById('editCatId').value = cat.id;
       document.getElementById('editCatName').value = cat.name;
       document.getElementById('editCatColor').value = cat.color;
-
       document.getElementById('editCategoryModal').classList.remove('hidden');
     }
 
-    function closeEditCategoryModal() {
-      document.getElementById('editCategoryModal').classList.add('hidden');
-    }
+    function closeEditCategoryModal() { document.getElementById('editCategoryModal').classList.add('hidden'); }
 
     async function handleEditCategory(e) {
       e.preventDefault();
@@ -1217,30 +1338,29 @@
       const name = document.getElementById('editCatName').value.trim();
       const color = document.getElementById('editCatColor').value;
 
-      const endpoint = currentTab === 'savings' ? `/api/categories/${id}` : `/api/expense-categories/${id}`;
+      let endpoint = `/api/categories/${id}`;
+      if (currentTab === 'expenses') endpoint = `/api/expense-categories/${id}`;
+      if (currentTab === 'income') endpoint = `/api/income-categories/${id}`;
 
-      try {
-        await fetch(endpoint, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, name, color })
-        });
+      await fetch(endpoint, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name, color })
+      });
 
-        closeEditCategoryModal();
-        await fetchAllData();
-        renderActiveTab();
-        renderCategoryListModal();
-      } catch (err) {
-        console.error("Error updating category:", err);
-        alert("ไม่สามารถบันทึกการแก้ไขได้");
-      }
+      closeEditCategoryModal();
+      await fetchAllData();
+      renderActiveTab();
+      renderCategoryListModal();
     }
 
     async function deleteCategory(catId) {
-      const categories = getCurrentCategories();
-      if (categories.length <= 1) return alert('ต้องมีอย่างน้อย 1 ประเภทในระบบ');
-      if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบประเภทนี้?')) {
-        const endpoint = currentTab === 'savings' ? `/api/categories/${catId}` : `/api/expense-categories/${catId}`;
+      if (getCurrentCategories().length <= 1) return alert('You must keep at least 1 category in the system.');
+      if (confirm('Are you sure you want to delete this category?')) {
+        let endpoint = `/api/categories/${catId}`;
+        if (currentTab === 'expenses') endpoint = `/api/expense-categories/${catId}`;
+        if (currentTab === 'income') endpoint = `/api/income-categories/${catId}`;
+
         await fetch(endpoint, { method: 'DELETE' });
         await fetchAllData();
         renderActiveTab();
